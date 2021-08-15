@@ -1,0 +1,14 @@
+#! /bin/sh
+ROOT=$(dirname $0)/..
+LIST="\
+	${ROOT}/proxmox7/pimox6/repo/dev/main/binary-arm64/librust-*_arm64.deb \
+	${ROOT}/proxmox7/dev/librust/arm64/librust-*_arm64.deb \
+	${ROOT}/proxmox/build/librust-*_arm64.deb \
+"
+
+rsync -ra /usr/share/cargo/registry/* usr/share/cargo/registry
+
+for i in ${LIST}
+do
+  dpkg-deb -x $i .
+done
