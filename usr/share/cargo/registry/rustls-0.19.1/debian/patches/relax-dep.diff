@@ -1,0 +1,22 @@
+Index: rustls/Cargo.toml
+===================================================================
+--- rustls.orig/Cargo.toml
++++ rustls/Cargo.toml
+@@ -44,7 +44,7 @@ name = "benchmarks"
+ path = "tests/benchmarks.rs"
+ harness = false
+ [dependencies.base64]
+-version = "0.13.0"
++version = "0.12.0"
+ 
+ [dependencies.log]
+ version = "0.4.4"
+@@ -54,7 +54,7 @@ optional = true
+ version = "0.16.11"
+ 
+ [dependencies.sct]
+-version = "0.6.0"
++version = "0.7.0"
+ 
+ [dependencies.webpki]
+ version = "0.21.0"

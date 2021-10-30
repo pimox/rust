@@ -1,0 +1,49 @@
+--- a/Cargo.toml
++++ b/Cargo.toml
+@@ -43,7 +43,6 @@
+ required-features = ["serde"]
+ [dependencies.libc]
+ version = "0.2.69"
+-optional = true
+ 
+ [dependencies.num-integer]
+ version = "0.1.36"
+@@ -53,10 +52,6 @@
+ version = "0.2"
+ default-features = false
+ 
+-[dependencies.pure-rust-locales]
+-version = "0.5.2"
+-optional = true
+-
+ [dependencies.rustc-serialize]
+ version = "0.3.20"
+ optional = true
+@@ -68,7 +63,6 @@
+ 
+ [dependencies.time]
+ version = "0.1.42"
+-optional = true
+ [dev-dependencies.bincode]
+ version = ">= 0.8.0, < 2"
+ 
+@@ -93,16 +87,15 @@
+ __doctest = []
+ __internal_bench = []
+ alloc = []
+-clock = ["libc", "std", "winapi"]
++clock = ["std"]
+ default = ["clock", "std", "oldtime"]
+-oldtime = ["time"]
++oldtime = []
+ std = []
+-unstable-locales = ["pure-rust-locales", "alloc"]
++unstable-locales = ["alloc"]
+ 
+ [target."cfg(windows)".dependencies.winapi]
+ version = "0.3.0"
+ features = ["std", "minwinbase", "minwindef", "timezoneapi"]
+-optional = true
+ [badges.appveyor]
+ repository = "chronotope/chrono"
+ 

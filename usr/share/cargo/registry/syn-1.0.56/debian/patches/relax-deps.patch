@@ -1,0 +1,11 @@
+--- a/Cargo.toml
++++ b/Cargo.toml
+@@ -39,7 +39,7 @@ required-features = ["full", "parsing"]
+ name = "file"
+ required-features = ["full", "parsing"]
+ [dependencies.proc-macro2]
+-version = "1.0.23"
++version = "1.0.18"
+ default-features = false
+ 
+ [dependencies.quote]

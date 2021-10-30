@@ -1,0 +1,22 @@
+--- a/Cargo.toml
++++ b/Cargo.toml
+@@ -125,4 +125,0 @@
+-[dependencies.pretty_env_logger]
+-version = "0.3"
+-optional = true
+-
+@@ -188,1 +184,1 @@
+-pretty-env-logger = ["pretty_env_logger"]
++pretty-env-logger = []
+--- a/src/bin/cargo/main.rs
++++ b/src/bin/cargo/main.rs
+@@ -19,9 +19,6 @@
+ use crate::command_prelude::*;
+ 
+ fn main() {
+-    #[cfg(feature = "pretty-env-logger")]
+-    pretty_env_logger::init_custom_env("CARGO_LOG");
+-    #[cfg(not(feature = "pretty-env-logger"))]
+     env_logger::init_from_env("CARGO_LOG");
+     cargo::core::maybe_allow_nightly_features();
+ 

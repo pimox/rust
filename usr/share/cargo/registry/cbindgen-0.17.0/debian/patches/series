@@ -1,0 +1,2 @@
+use-cython3-for-tests.patch
+use-tmpdir-for-tests.patch

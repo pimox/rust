@@ -1,0 +1,11 @@
+--- a/Cargo.toml
++++ b/Cargo.toml
+@@ -20,7 +20,7 @@
+ license = "MIT"
+ repository = "https://github.com/Geal/rust-syslog"
+ [dependencies.error-chain]
+-version = "^0.11.0"
++version = "^0.12.0"
+ 
+ [dependencies.libc]
+ version = "^0.2"

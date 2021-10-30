@@ -1,0 +1,22 @@
+Index: lexical-core/Cargo.toml
+===================================================================
+--- lexical-core.orig/Cargo.toml
++++ lexical-core/Cargo.toml
+@@ -35,7 +35,7 @@ lto = true
+ debug = false
+ debug-assertions = false
+ [dependencies.arrayvec]
+-version = "0.4"
++version = "0.5"
+ features = ["array-sizes-33-128"]
+ optional = true
+ 
+@@ -43,7 +43,7 @@ optional = true
+ version = "1.2"
+ 
+ [dependencies.cfg-if]
+-version = "0.1"
++version = "1.0"
+ 
+ [dependencies.dtoa]
+ version = "0.4"

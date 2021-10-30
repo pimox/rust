@@ -1,0 +1,4 @@
+relax-dep.diff
+0001-implement-local-crate-support.patch
+0002-new_with_local_crate-work-for-empty-version-strings-.patch
+0003-add-note-about-crate_src_path-limitation.patch

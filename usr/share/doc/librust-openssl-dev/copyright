@@ -1,0 +1,21 @@
+Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+Upstream-Name: openssl
+Upstream-Contact: Steven Fackler <sfackler@gmail.com>
+Source: https://github.com/sfackler/rust-openssl
+
+Files: *
+Copyright:
+ 2013-2018 Steven Fackler <sfackler@gmail.com>
+ 2013 Jack Lloyd
+ 2011-2017 Google Inc.
+License: Apache-2.0
+
+Files: debian/*
+Copyright:
+ 2018-2020 Debian Rust Maintainers <pkg-rust-maintainers@alioth-lists.debian.net>
+ 2018-2020 Ximin Luo <infinity0@debian.org>
+License: Apache-2.0
+
+License: Apache-2.0
+ Debian systems provide the Apache 2.0 license in
+ /usr/share/common-licenses/Apache-2.0

@@ -1,0 +1,19 @@
+Index: apt-pkg-native/build.rs
+===================================================================
+--- apt-pkg-native.orig/build.rs
++++ apt-pkg-native/build.rs
+@@ -1,5 +1,7 @@
+ extern crate cc;
+ 
++use std::env;
++
+ const SRC: &str = "apt-pkg-c/lib.cpp";
+ 
+ fn main() {
+@@ -17,5 +19,6 @@ fn main() {
+ 
+     build.compile("libapt-pkg-c.a");
+ 
++    println!("dh-cargo:deb-built-using=apt-pkg-c=0={}", env::var("CARGO_MANIFEST_DIR").unwrap());
+     println!("cargo:rustc-link-lib=apt-pkg");
+ }

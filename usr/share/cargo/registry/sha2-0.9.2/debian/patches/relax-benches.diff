@@ -1,0 +1,25 @@
+Description: remove benchmarks
+ feature breaks source build
+Author: ed neville <ed-debian@s5h.net>
+Forwarded: not-needed
+Last-Update: 2020-12-18
+---
+This patch header follows DEP-3: http://dep.debian.net/deps/dep3/
+Index: sha2/benches/sha256.rs
+===================================================================
+--- sha2.orig/benches/sha256.rs
++++ /dev/null
+@@ -1,4 +0,0 @@
+-#![no_std]
+-#![feature(test)]
+-
+-digest::bench!(sha2::Sha256);
+Index: sha2/benches/sha512.rs
+===================================================================
+--- sha2.orig/benches/sha512.rs
++++ /dev/null
+@@ -1,4 +0,0 @@
+-#![no_std]
+-#![feature(test)]
+-
+-digest::bench!(sha2::Sha512);

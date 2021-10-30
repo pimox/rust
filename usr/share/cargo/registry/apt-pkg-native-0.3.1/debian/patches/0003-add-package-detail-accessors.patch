@@ -1,0 +1,218 @@
+From 63e143b3858daf63d0af1aad3f43699681d59768 Mon Sep 17 00:00:00 2001
+From: Stefan Reiter <s.reiter@proxmox.com>
+Date: Mon, 13 Jul 2020 17:17:48 +0200
+Subject: [PATCH 3/3] add package detail accessors
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+* short description
+* long description
+* maintainer
+* homepage
+
+Requires constructing a pkgRecords::Parser to read for some reason.
+AFAICT this parser is bound to the pkgRecords instance and deleted
+together with it, so it doesn't require an explicit delete/free.
+
+Signed-off-by: Fabian Grünbichler <f.gruenbichler@proxmox.com>
+---
+ apt-pkg-c/lib.cpp | 55 +++++++++++++++++++++++++++++++++++++++++++++++
+ src/raw.rs        |  7 ++++++
+ src/sane.rs       | 20 +++++++++++++++++
+ 3 files changed, 82 insertions(+)
+
+diff --git a/apt-pkg-c/lib.cpp b/apt-pkg-c/lib.cpp
+index 8e899d5..d3901fa 100644
+--- a/apt-pkg-c/lib.cpp
++++ b/apt-pkg-c/lib.cpp
+@@ -17,6 +17,9 @@ struct PCache {
+ 
+     // Borrowed from cache_file.
+     pkgCache *cache;
++
++    // Owned by us.
++    pkgRecords *records;
+ };
+ 
+ struct PPkgIterator {
+@@ -41,6 +44,9 @@ struct PVerIterator {
+ struct PVerFileIterator {
+     // Owned by us.
+     pkgCache::VerFileIterator iterator;
++
++    // Borrow of "static" PCache.
++    PCache *cache;
+ };
+ 
+ struct PPkgFileIterator {
+@@ -48,6 +54,10 @@ struct PPkgFileIterator {
+     pkgCache::PkgFileIterator iterator;
+ };
+ 
++struct PVerFileParser {
++    pkgRecords::Parser *parser;
++};
++
+ extern "C" {
+     void init_config_system();
+ 
+@@ -101,6 +111,15 @@ extern "C" {
+     void ver_file_iter_next(PVerFileIterator *iterator);
+     bool ver_file_iter_end(PVerFileIterator *iterator);
+ 
++    // ver_file_parser creation
++    PVerFileParser *ver_file_iter_get_parser(PVerFileIterator *iterator);
++
++    // ver_file_parser access
++    const char *ver_file_parser_short_desc(PVerFileParser *parser);
++    const char *ver_file_parser_long_desc(PVerFileParser *parser);
++    const char *ver_file_parser_maintainer(PVerFileParser *parser);
++    const char *ver_file_parser_homepage(PVerFileParser *parser);
++
+     // ver_file_iter has no accessors, only the creation of pkg_file_iter
+ 
+ 
+@@ -133,16 +152,19 @@ void init_config_system() {
+ PCache *pkg_cache_create() {
+     pkgCacheFile *cache_file = new pkgCacheFile();
+     pkgCache *cache = cache_file->GetPkgCache();
++    pkgRecords *records = new pkgRecords(*cache);
+ 
+     PCache *ret = new PCache();
+     ret->cache_file = cache_file;
+     ret->cache = cache;
++    ret->records = records;
+ 
+     return ret;
+ }
+ 
+ void pkg_cache_release(PCache *cache) {
+     // TODO: is cache->cache cleaned up with cache->cache_file?
++    delete cache->records;
+     delete cache->cache_file;
+     delete cache;
+ }
+@@ -264,6 +286,7 @@ const char *ver_iter_arch(PVerIterator *wrapper) {
+ PVerFileIterator *ver_iter_ver_file_iter(PVerIterator *wrapper) {
+     PVerFileIterator *new_wrapper = new PVerFileIterator();
+     new_wrapper->iterator = wrapper->iterator.FileList();
++    new_wrapper->cache = wrapper->cache;
+     return new_wrapper;
+ }
+ 
+@@ -275,6 +298,38 @@ void ver_file_iter_next(PVerFileIterator *wrapper) {
+     ++wrapper->iterator;
+ }
+ 
++PVerFileParser *ver_file_iter_get_parser(PVerFileIterator *wrapper) {
++    PVerFileParser *parser = new PVerFileParser();
++    parser->parser = &wrapper->cache->records->Lookup(wrapper->iterator);
++    return parser;
++}
++
++const char *to_c_string(std::string s) {
++    char *cstr = new char[s.length()+1];
++    std::strcpy(cstr, s.c_str());
++    return cstr;
++}
++
++const char *ver_file_parser_short_desc(PVerFileParser *parser) {
++    std::string desc = parser->parser->ShortDesc();
++    return to_c_string(desc);
++}
++
++const char *ver_file_parser_long_desc(PVerFileParser *parser) {
++    std::string desc = parser->parser->LongDesc();
++    return to_c_string(desc);
++}
++
++const char *ver_file_parser_maintainer(PVerFileParser *parser) {
++    std::string maint = parser->parser->Maintainer();
++    return to_c_string(maint);
++}
++
++const char *ver_file_parser_homepage(PVerFileParser *parser) {
++    std::string hp = parser->parser->Homepage();
++    return to_c_string(hp);
++}
++
+ bool ver_file_iter_end(PVerFileIterator *wrapper) {
+     return wrapper->iterator.end();
+ }
+diff --git a/src/raw.rs b/src/raw.rs
+index 73791e5..4211fb7 100644
+--- a/src/raw.rs
++++ b/src/raw.rs
+@@ -13,6 +13,7 @@ pub type PPkgIterator = *mut c_void;
+ pub type PVerIterator = *mut c_void;
+ pub type PVerFileIterator = *mut c_void;
+ pub type PPkgFileIterator = *mut c_void;
++pub type PVerFileParser = *mut c_void;
+ 
+ #[link(name = "apt-pkg-c", kind = "static")]
+ #[link(name = "apt-pkg")]
+@@ -83,6 +84,12 @@ extern "C" {
+     pub fn ver_file_iter_next(iterator: PVerFileIterator);
+     pub fn ver_file_iter_end(iterator: PVerFileIterator) -> bool;
+ 
++    pub fn ver_file_iter_get_parser(iterator: PVerFileIterator) -> PVerFileParser;
++    pub fn ver_file_parser_short_desc(parser: PVerFileParser) -> *const c_char;
++    pub fn ver_file_parser_long_desc(parser: PVerFileParser) -> *const c_char;
++    pub fn ver_file_parser_maintainer(parser: PVerFileParser) -> *const c_char;
++    pub fn ver_file_parser_homepage(parser: PVerFileParser) -> *const c_char;
++
+     pub fn ver_file_iter_pkg_file_iter(iterator: PVerFileIterator) -> PPkgFileIterator;
+     pub fn pkg_file_iter_release(iterator: PPkgFileIterator);
+ 
+diff --git a/src/sane.rs b/src/sane.rs
+index 192c7f4..eb2b47c 100644
+--- a/src/sane.rs
++++ b/src/sane.rs
+@@ -284,6 +284,7 @@ pub struct VerFileIterator<'c> {
+ pub struct VerFileView<'c> {
+     cache: PhantomData<&'c MutexGuard<'c, raw::CacheHolder>>,
+     ptr: raw::PVerFileIterator,
++    parser: raw::PVerFileParser,
+ }
+ 
+ impl<'c> RawIterator for VerFileIterator<'c> {
+@@ -300,9 +301,12 @@ impl<'c> RawIterator for VerFileIterator<'c> {
+     fn as_view(&self) -> Self::View {
+         assert!(!self.is_end());
+ 
++        let parser = unsafe { raw::ver_file_iter_get_parser(self.ptr) };
++
+         VerFileView {
+             ptr: self.ptr,
+             cache: self.cache,
++            parser
+         }
+     }
+ 
+@@ -321,6 +325,22 @@ impl<'c> VerFileView<'c> {
+             },
+         }
+     }
++
++    pub fn short_desc(&self) -> Option<String> {
++        unsafe { make_owned_ascii_string(raw::ver_file_parser_short_desc(self.parser)) }
++    }
++
++    pub fn long_desc(&self) -> Option<String> {
++        unsafe { make_owned_ascii_string(raw::ver_file_parser_long_desc(self.parser)) }
++    }
++
++    pub fn maintainer(&self) -> Option<String> {
++        unsafe { make_owned_ascii_string(raw::ver_file_parser_maintainer(self.parser)) }
++    }
++
++    pub fn homepage(&self) -> Option<String> {
++        unsafe { make_owned_ascii_string(raw::ver_file_parser_homepage(self.parser)) }
++    }
+ }
+ 
+ /// An "iterator"/pointer to a point in a file list.
+-- 
+2.20.1
+

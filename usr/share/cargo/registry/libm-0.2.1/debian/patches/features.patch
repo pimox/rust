@@ -1,0 +1,14 @@
+--- a/Cargo.toml
++++ b/Cargo.toml
+@@ -23,11 +23,3 @@ license = "MIT OR Apache-2.0"
+ repository = "https://github.com/rust-lang/libm"
+ [dev-dependencies.no-panic]
+ version = "0.1.8"
+-[build-dependencies.rand]
+-version = "0.6.5"
+-optional = true
+-
+-[features]
+-default = []
+-musl-reference-tests = ["rand"]
+-unstable = []

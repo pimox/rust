@@ -1,0 +1,68 @@
+From 5c5b12927ae515d8da5bf03208cdf9ae381a14ba Mon Sep 17 00:00:00 2001
+From: Stefan Reiter <s.reiter@proxmox.com>
+Date: Mon, 13 Jul 2020 17:16:19 +0200
+Subject: [PATCH 2/3] add priority type accessor to VerView
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Signed-off-by: Fabian Grünbichler <f.gruenbichler@proxmox.com>
+---
+ apt-pkg-c/lib.cpp | 5 +++++
+ src/raw.rs        | 1 +
+ src/sane.rs       | 4 ++++
+ 3 files changed, 10 insertions(+)
+
+diff --git a/apt-pkg-c/lib.cpp b/apt-pkg-c/lib.cpp
+index 61d9c6b..8e899d5 100644
+--- a/apt-pkg-c/lib.cpp
++++ b/apt-pkg-c/lib.cpp
+@@ -85,6 +85,7 @@ extern "C" {
+     const char *ver_iter_version(PVerIterator *iterator);
+     const char *ver_iter_section(PVerIterator *iterator);
+     const char *ver_iter_arch(PVerIterator *iterator);
++    const char *ver_iter_priority_type(PVerIterator *wrapper);
+ 
+ #ifndef YE_OLDE_APT
+     const char *ver_iter_source_package(PVerIterator *iterator);
+@@ -233,6 +234,10 @@ const char *ver_iter_section(PVerIterator *wrapper) {
+    return wrapper->iterator.Section();
+ }
+ 
++const char *ver_iter_priority_type(PVerIterator *wrapper) {
++    return wrapper->iterator.PriorityType();
++}
++
+ #ifndef YE_OLDE_APT
+ 
+ const char *ver_iter_source_package(PVerIterator *wrapper) {
+diff --git a/src/raw.rs b/src/raw.rs
+index 7bdd0a9..73791e5 100644
+--- a/src/raw.rs
++++ b/src/raw.rs
+@@ -72,6 +72,7 @@ extern "C" {
+     #[cfg(not(feature = "ye-olde-apt"))]
+     pub fn ver_iter_source_version(iterator: PVerIterator) -> *mut c_char;
+     pub fn ver_iter_arch(iterator: PVerIterator) -> *mut c_char;
++    pub fn ver_iter_priority_type(iterator: PVerIterator) -> *mut c_char;
+ 
+     #[cfg(not(feature = "ye-olde-apt"))]
+     pub fn ver_iter_priority(iterator: PVerIterator) -> i32;
+diff --git a/src/sane.rs b/src/sane.rs
+index 7393fbc..192c7f4 100644
+--- a/src/sane.rs
++++ b/src/sane.rs
+@@ -237,6 +237,10 @@ impl<'c> VerView<'c> {
+         unsafe { make_owned_ascii_string(raw::ver_iter_section(self.ptr)) }
+     }
+ 
++    pub fn priority_type(&self) -> Option<String> {
++        unsafe { make_owned_ascii_string(raw::ver_iter_priority_type(self.ptr)) }
++    }
++
+     #[cfg(not(feature = "ye-olde-apt"))]
+     pub fn source_package(&self) -> String {
+         unsafe {
+-- 
+2.20.1
+

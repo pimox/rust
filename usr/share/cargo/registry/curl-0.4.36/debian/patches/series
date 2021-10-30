@@ -1,0 +1,3 @@
+disable-mesalink.patch
+disable-features.patch
+disable-static-with-ftp-disabled-test.patch

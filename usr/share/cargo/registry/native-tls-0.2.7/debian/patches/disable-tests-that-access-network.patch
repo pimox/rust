@@ -1,0 +1,35 @@
+Index: native-tls/src/test.rs
+===================================================================
+--- native-tls.orig/src/test.rs
++++ native-tls/src/test.rs
+@@ -16,7 +16,6 @@ macro_rules! p {
+     };
+ }
+ 
+-#[test]
+ fn connect_google() {
+     let builder = p!(TlsConnector::new());
+     let s = p!(TcpStream::connect("google.com:443"));
+@@ -31,14 +30,12 @@ fn connect_google() {
+     assert!(result.ends_with(b"</HTML>\r\n") || result.ends_with(b"</html>"));
+ }
+ 
+-#[test]
+ fn connect_bad_hostname() {
+     let builder = p!(TlsConnector::new());
+     let s = p!(TcpStream::connect("google.com:443"));
+     builder.connect("goggle.com", s).unwrap_err();
+ }
+ 
+-#[test]
+ fn connect_bad_hostname_ignored() {
+     let builder = p!(TlsConnector::builder()
+         .danger_accept_invalid_hostnames(true)
+@@ -47,7 +44,6 @@ fn connect_bad_hostname_ignored() {
+     builder.connect("goggle.com", s).unwrap();
+ }
+ 
+-#[test]
+ fn connect_no_root_certs() {
+     let builder = p!(TlsConnector::builder().disable_built_in_roots(true).build());
+     let s = p!(TcpStream::connect("google.com:443"));

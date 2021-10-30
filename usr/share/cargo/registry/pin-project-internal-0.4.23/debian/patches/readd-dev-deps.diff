@@ -1,0 +1,20 @@
+Description: Re-add dev dependencies
+ The publishing process of the crate seemingly strips out the dev
+ dependencies. This causes the doctests to fail which would require these
+ dependencies to be present. This patch adds the dev dependencies as found
+ in the project's upstream repository.
+Author: Wolfgang Silbermayr <wolfgang@silbermayr.at>
+Forwarded: no
+Last-Update: 2020-09-07
+---
+This patch header follows DEP-3: http://dep.debian.net/deps/dep3/
+--- a/Cargo.toml
++++ b/Cargo.toml
+@@ -34,3 +34,7 @@
+ [dependencies.syn]
+ version = "1.0.13"
+ features = ["full", "visit-mut"]
++
++[dev-dependencies]
++pin-project = "0.4.23"
++rustversion = "1.0"

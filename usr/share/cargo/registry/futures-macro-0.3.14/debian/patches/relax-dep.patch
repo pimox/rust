@@ -1,0 +1,11 @@
+--- a/Cargo.toml
++++ b/Cargo.toml
+@@ -24,7 +24,7 @@ repository = "https://github.com/rust-la
+ [lib]
+ proc-macro = true
+ [dependencies.proc-macro-hack]
+-version = "0.5.19"
++version = "0.5"
+ 
+ [dependencies.proc-macro2]
+ version = "1.0"

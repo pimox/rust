@@ -1,0 +1,13 @@
+Index: openidconnect/Cargo.toml
+===================================================================
+--- openidconnect.orig/Cargo.toml
++++ openidconnect/Cargo.toml
+@@ -50,7 +50,7 @@ version = "0.16"
+ version = "1.0"
+ 
+ [dependencies.serde-value]
+-version = "0.6"
++version = "0.7"
+ 
+ [dependencies.serde_derive]
+ version = "1.0"

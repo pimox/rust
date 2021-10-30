@@ -1,0 +1,96 @@
+Description: Use AUTOPKGTEST_TMP directory for tests requiring directory modifications
+Author: Nikos Tsipinakis <nikos@tsipinakis.com>
+Last-Update: 2020-06-05
+
+--- a/src/lib.rs
++++ b/src/lib.rs
+@@ -655,10 +655,19 @@
+ }
+ 
+ #[cfg(test)]
++fn get_test_dir() -> PathBuf {
++    match env::var_os("AUTOPKGTEST_TMP") {
++        Some(dir) => PathBuf::from(dir),
++        None => env::current_dir().unwrap(),
++    }
++}
++
++#[cfg(test)]
+ fn make_absolute<P>(path: P) -> PathBuf where P: AsRef<Path> {
+-    env::current_dir().unwrap().join(path.as_ref())
++    get_test_dir().join(path.as_ref())
+ }
+ 
++
+ #[cfg(test)]
+ fn iter_after<A, I, J>(mut iter: I, mut prefix: J) -> Option<I> where
+     I: Iterator<Item=A> + Clone, J: Iterator<Item=A>, A: PartialEq
+@@ -678,8 +687,8 @@
+ }
+ 
+ #[cfg(test)]
+-fn make_relative<P>(path: P) -> PathBuf where P: AsRef<Path> {
+-    iter_after(path.as_ref().components(), env::current_dir().unwrap().components())
++fn make_relative<P>(path: P, reference: P) -> PathBuf where P: AsRef<Path> {
++    iter_after(path.as_ref().components(), reference.as_ref().components())
+         .unwrap().as_path().to_owned()
+ }
+ 
+@@ -774,24 +783,24 @@
+     perms.set_mode(0o700);
+     fs::set_permissions(&test_runtime_dir, perms).unwrap();
+ 
+-    let cwd = env::current_dir().unwrap().to_string_lossy().into_owned();
++    let cwd = get_test_dir().to_string_lossy().into_owned();
+     let xd = BaseDirectories::with_env("", "", &*make_env(vec![
+             ("HOME", format!("{}/test_files/user", cwd)),
+             ("XDG_RUNTIME_DIR", format!("{}/test_files/runtime-good", cwd)),
+         ])).unwrap();
+ 
+     xd.create_runtime_directory("foo").unwrap();
+-    assert!(path_is_dir("test_files/runtime-good/foo"));
++    assert!(path_is_dir(&format!("{}/test_files/runtime-good/foo", cwd)));
+     let w = xd.place_runtime_file("bar/baz").unwrap();
+-    assert!(path_is_dir("test_files/runtime-good/bar"));
+-    assert!(!path_exists("test_files/runtime-good/bar/baz"));
++    assert!(path_is_dir(&format!("{}/test_files/runtime-good/bar", cwd)));
++    assert!(!path_exists(&format!("{}/test_files/runtime-good/bar/baz", cwd)));
+     File::create(&w).unwrap();
+-    assert!(path_exists("test_files/runtime-good/bar/baz"));
++    assert!(path_exists(&format!("{}/test_files/runtime-good/bar/baz", cwd)));
+     assert!(xd.find_runtime_file("bar/baz") == Some(w.clone()));
+     File::open(&w).unwrap();
+     fs::remove_file(&w).unwrap();
+     let root = xd.list_runtime_files(".");
+-    let mut root = root.into_iter().map(|p| make_relative(&p)).collect::<Vec<_>>();
++    let mut root = root.into_iter().map(|p| make_relative(&p, &get_test_dir())).collect::<Vec<_>>();
+     root.sort();
+     assert_eq!(root,
+                vec![PathBuf::from("test_files/runtime-good/bar"),
+@@ -799,7 +808,7 @@
+     assert!(xd.list_runtime_files("bar").is_empty());
+     assert!(xd.find_runtime_file("foo/qux").is_none());
+     assert!(xd.find_runtime_file("qux/foo").is_none());
+-    assert!(!path_exists("test_files/runtime-good/qux"));
++    assert!(!path_exists(&format!("{}/test_files/runtime-good/qux", cwd)));
+ }
+ 
+ #[test]
+@@ -815,7 +824,7 @@
+         ])).unwrap();
+ 
+     let files = xd.list_config_files(".");
+-    let mut files = files.into_iter().map(|p| make_relative(&p)).collect::<Vec<_>>();
++    let mut files = files.into_iter().map(|p| make_relative(&p, &env::current_dir().unwrap())).collect::<Vec<_>>();
+     files.sort();
+     assert_eq!(files,
+         [
+@@ -832,7 +841,7 @@
+         ].iter().map(PathBuf::from).collect::<Vec<_>>());
+ 
+     let files = xd.list_config_files_once(".");
+-    let mut files = files.into_iter().map(|p| make_relative(&p)).collect::<Vec<_>>();
++    let mut files = files.into_iter().map(|p| make_relative(&p, &env::current_dir().unwrap())).collect::<Vec<_>>();
+     files.sort();
+     assert_eq!(files,
+         [

@@ -1,0 +1,13 @@
+Index: zstd-sys-1/Cargo.toml
+===================================================================
+--- zstd-sys-1.orig/Cargo.toml
++++ zstd-sys-1/Cargo.toml
+@@ -25,7 +25,7 @@ repository = "https://github.com/gyscos/
+ [dependencies.libc]
+ version = "0.2.45"
+ [build-dependencies.bindgen]
+-version = "0.47.0"
++version = ">= 0.51.0, < 0.54"
+ 
+ [build-dependencies.pkg-config]
+ version = "0.3"

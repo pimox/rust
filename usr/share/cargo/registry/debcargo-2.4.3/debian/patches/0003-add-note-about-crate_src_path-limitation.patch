@@ -1,0 +1,30 @@
+From 9ec40db40678d5f5076c7d865108e6569fcc2589 Mon Sep 17 00:00:00 2001
+From: Ximin Luo <infinity0@debian.org>
+Date: Mon, 20 Apr 2020 23:01:32 +0100
+Subject: [PATCH 3/3] add note about crate_src_path limitation
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Signed-off-by: Fabian Grünbichler <f.gruenbichler@proxmox.com>
+---
+ debcargo.toml.example | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
+
+Index: debcargo/debcargo.toml.example
+===================================================================
+--- debcargo.orig/debcargo.toml.example
++++ debcargo/debcargo.toml.example
+@@ -35,7 +35,11 @@
+ #
+ #overlay = "."
+ 
+-# Local directory where crate can be found, instead of downloading from crates.io. Resolved relative to the directory that contains this config file.
++# Local directory where crate can be found, instead of crates.io. Resolved
++# relative to the directory that contains this config file. Note: this is
++# currently experimental and only works for crates whose dependencies are all
++# published on crates.io. For example, not rustup. This limitation will
++# hopefully be fixed in the future.
+ #
+ #crate_src_path = "../.."
+ 

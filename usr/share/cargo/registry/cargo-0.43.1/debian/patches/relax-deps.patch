@@ -1,0 +1,44 @@
+Index: cargo/Cargo.toml
+===================================================================
+--- cargo.orig/Cargo.toml
++++ cargo/Cargo.toml
+@@ -49,7 +49,7 @@ version = "2.31.2"
+ version = "0.31"
+ 
+ [dependencies.crossbeam-utils]
+-version = "0.7"
++version = "0.8"
+ 
+ [dependencies.crypto-hash]
+ version = "0.3.1"
+@@ -75,10 +75,10 @@ features = ["zlib"]
+ version = "0.4"
+ 
+ [dependencies.git2]
+-version = "0.11.0"
++version = "0.13.11"
+ 
+ [dependencies.git2-curl]
+-version = "0.12.0"
++version = "0.14.1"
+ 
+ [dependencies.glob]
+ version = "0.3.0"
+@@ -111,7 +111,7 @@ version = "1.2.0"
+ version = "0.2"
+ 
+ [dependencies.libgit2-sys]
+-version = "0.10.0"
++version = "0.12.13"
+ 
+ [dependencies.log]
+ version = "0.4.6"
+@@ -194,7 +194,7 @@ deny-warnings = []
+ pretty-env-logger = []
+ vendored-openssl = ["openssl"]
+ [target."cfg(target_os = \"macos\")".dependencies.core-foundation]
+-version = "0.7.0"
++version = ">= 0.7, < 0.10"
+ features = ["mac_os_10_7_support"]
+ [target."cfg(windows)".dependencies.fwdansi]
+ version = "1"

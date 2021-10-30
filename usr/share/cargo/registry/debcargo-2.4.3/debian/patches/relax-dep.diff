@@ -1,0 +1,20 @@
+Index: debcargo/Cargo.toml
+===================================================================
+--- debcargo.orig/Cargo.toml
++++ debcargo/Cargo.toml
+@@ -40,13 +40,13 @@ version = "0.2"
+ version = "1"
+ 
+ [dependencies.git2]
+-version = "0.11"
++version = "0.13.5"
+ 
+ [dependencies.glob]
+ version = "0.3"
+ 
+ [dependencies.itertools]
+-version = "0.8"
++version = ">= 0.8, < 0.10"
+ 
+ [dependencies.regex]
+ version = "1.0"

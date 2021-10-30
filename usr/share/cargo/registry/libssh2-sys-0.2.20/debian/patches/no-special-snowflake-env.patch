@@ -1,0 +1,20 @@
+--- a/build.rs
++++ b/build.rs
+@@ -17,7 +17,7 @@
+     // can lead to having two copies of libssl loaded at once.
+     // See https://github.com/alexcrichton/ssh2-rs/pull/88
+     println!("cargo:rerun-if-env-changed=LIBSSH2_SYS_USE_PKG_CONFIG");
+-    if env::var("LIBSSH2_SYS_USE_PKG_CONFIG").is_ok() {
++    if true {
+         if zlib_ng_compat {
+             panic!("LIBSSH2_SYS_USE_PKG_CONFIG set, but cannot use zlib-ng-compat with system libssh2");
+         }
+@@ -26,7 +26,7 @@
+         }
+     }
+ 
+-    if !Path::new("libssh2/.git").exists() {
++    if false {
+         let _ = Command::new("git")
+             .args(&["submodule", "update", "--init"])
+             .status();

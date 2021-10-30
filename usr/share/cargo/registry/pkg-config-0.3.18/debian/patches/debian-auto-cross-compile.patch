@@ -1,0 +1,15 @@
+--- a/src/lib.rs
++++ b/src/lib.rs
+@@ -399,7 +389,11 @@ impl Config {
+     fn command(&self, name: &str, args: &[&str]) -> Command {
+         let exe = self
+             .env_var_os("PKG_CONFIG")
+-            .unwrap_or_else(|| OsString::from("pkg-config"));
++            .unwrap_or_else(|| {
++                self.env_var_os("DEB_HOST_GNU_TYPE")
++                    .map(|mut t| { t.push(OsString::from("-pkg-config")); t })
++                    .unwrap_or_else(|| OsString::from("pkg-config"))
++            });
+         let mut cmd = Command::new(exe);
+         if self.is_static(name) {
+             cmd.arg("--static");

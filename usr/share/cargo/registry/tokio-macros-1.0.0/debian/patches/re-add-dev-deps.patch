@@ -1,0 +1,11 @@
+Index: tokio-macros/Cargo.toml
+===================================================================
+--- tokio-macros.orig/Cargo.toml
++++ tokio-macros/Cargo.toml
+@@ -37,5 +37,6 @@ version = "1.0.3"
+ features = ["full"]
+ 
+ [dev-dependencies]
++tokio = { version = "1.0.0", features = ["full"] }
+ 
+ [features]

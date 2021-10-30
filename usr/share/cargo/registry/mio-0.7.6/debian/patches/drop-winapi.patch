@@ -1,0 +1,17 @@
+Index: mio/Cargo.toml
+===================================================================
+--- mio.orig/Cargo.toml
++++ mio/Cargo.toml
+@@ -60,12 +60,3 @@ udp = ["net"]
+ uds = ["net"]
+ [target."cfg(unix)".dependencies.libc]
+ version = "0.2.69"
+-[target."cfg(windows)".dependencies.miow]
+-version = "0.3.6"
+-
+-[target."cfg(windows)".dependencies.ntapi]
+-version = "0.3"
+-
+-[target."cfg(windows)".dependencies.winapi]
+-version = "0.3"
+-features = ["winsock2", "mswsock"]

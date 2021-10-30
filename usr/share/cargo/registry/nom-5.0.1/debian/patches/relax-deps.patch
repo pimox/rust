@@ -1,0 +1,11 @@
+--- a/Cargo.toml
++++ b/Cargo.toml
+@@ -155,7 +155,7 @@
+ [dev-dependencies.jemallocator]
+ version = "^0.1"
+ [build-dependencies.version_check]
+-version = "^0.1"
++version = "^0.9"
+ 
+ [features]
+ alloc = []

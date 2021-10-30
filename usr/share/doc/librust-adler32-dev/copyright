@@ -1,0 +1,34 @@
+Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+Upstream-Name: adler32
+Upstream-Contact: Remi Rampin <remirampin@gmail.com>
+Source: https://github.com/remram44/adler32-rs
+
+Files: *
+Copyright:
+ 2015-2020 Remi Rampin <remirampin@gmail.com>
+ 1995-2013 Jean-loup Gailly and Mark Adler
+License: Zlib
+Comment: Original C code by Zlib authors, Rust code by Remi Rampin
+
+Files: debian/*
+Copyright:
+ 2018 Debian Rust Maintainers <pkg-rust-maintainers@alioth-lists.debian.net>
+ 2018 kpcyrd <git@rxv.cc>
+License: BSD-3-Clause AND Zlib
+
+License: Zlib
+ This software is provided 'as-is', without any express or implied
+ warranty.  In no event will the authors be held liable for any damages
+ arising from the use of this software.
+ .
+ Permission is granted to anyone to use this software for any purpose,
+ including commercial applications, and to alter it and redistribute it
+ freely, subject to the following restrictions:
+ .
+ 1. The origin of this software must not be misrepresented; you must not
+    claim that you wrote the original software. If you use this software
+    in a product, an acknowledgment in the product documentation would be
+    appreciated but is not required.
+ 2. Altered source versions must be plainly marked as such, and must not be
+    misrepresented as being the original software.
+ 3. This notice may not be removed or altered from any source distribution.

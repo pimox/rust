@@ -1,0 +1,44 @@
+Index: build/Cargo.toml
+===================================================================
+--- build.orig/Cargo.toml
++++ build/Cargo.toml
+@@ -22,16 +22,9 @@ keywords = ["zstd", "zstandard", "compre
+ categories = ["compression", "api-bindings"]
+ license = "MIT"
+ repository = "https://github.com/gyscos/zstd-rs"
+-[dependencies.futures]
+-version = "0.1"
+-optional = true
+-
+-[dependencies.tokio-io]
+-version = "0.1"
+-optional = true
+ 
+ [dependencies.zstd-safe]
+-version = "1.4.7"
++version = "1.4.9"
+ features = ["experimental"]
+ default-features = false
+ [dev-dependencies.clap]
+@@ -40,12 +33,6 @@ version = "2.6.0"
+ [dev-dependencies.humansize]
+ version = "1.0"
+ 
+-[dev-dependencies.partial-io]
+-version = "0.3"
+-
+-[dev-dependencies.quickcheck]
+-version = "0.6"
+-
+ [dev-dependencies.walkdir]
+ version = "2.2.5"
+ 
+@@ -53,7 +40,7 @@ version = "2.2.5"
+ bindgen = ["zstd-safe/bindgen"]
+ default = ["legacy"]
+ legacy = ["zstd-safe/legacy"]
+-tokio = ["tokio-io", "futures", "partial-io/quickcheck", "partial-io/tokio"]
++tokio = []
+ wasm = ["zstd-safe/std"]
+ [badges.travis-ci]
+ repository = "gyscos/zstd-rs"

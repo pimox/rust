@@ -1,0 +1,13 @@
+Index: parking-lot-core/Cargo.toml
+===================================================================
+--- parking-lot-core.orig/Cargo.toml
++++ parking-lot-core/Cargo.toml
+@@ -25,7 +25,7 @@ version = "0.3.49"
+ optional = true
+ 
+ [dependencies.cfg-if]
+-version = "0.1.10"
++version = "1.0"
+ 
+ [dependencies.instant]
+ version = "0.1.4"

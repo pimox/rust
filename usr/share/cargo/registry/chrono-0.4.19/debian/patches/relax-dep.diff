@@ -1,0 +1,15 @@
+--- a/Cargo.toml
++++ b/Cargo.toml
+@@ -67,10 +67,10 @@
+ default-features = false
+ 
+ [dependencies.time]
+-version = "0.1.43"
++version = "0.1.42"
+ optional = true
+ [dev-dependencies.bincode]
+-version = "0.8.0"
++version = ">= 0.8.0, < 2"
+ 
+ [dev-dependencies.criterion]
+ version = "0.3"

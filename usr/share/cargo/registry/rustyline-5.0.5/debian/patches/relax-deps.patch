@@ -1,0 +1,11 @@
+--- a/Cargo.toml
++++ b/Cargo.toml
+@@ -61,7 +61,7 @@
+ default = ["with-dirs"]
+ with-dirs = ["dirs"]
+ [target."cfg(unix)".dependencies.nix]
+-version = "0.14"
++version = "0.16"
+ 
+ [target."cfg(unix)".dependencies.utf8parse]
+ version = "0.1"

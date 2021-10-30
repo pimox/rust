@@ -1,0 +1,29 @@
+# Changelog
+
+Notes significant changes to lexical-core.
+
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
+and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+## [Unreleased]
+
+## [0.4.3]
+- Fixed a bug (issue #20) leading to incorrect float parsing (1 ULP error) for slow-path algorithms containing floats with a trailing 0-digit in the fraction component (discovery by @dangrabcad). Added in comprehensive unittests to avoid future regressions.
+- Fixed CI for older Rustc versions due to issues with the `edition` keyword.
+- Updated dependencies (credit to @junhoo).
+- Updated the benchmarks for float and integer formatting to use `Write::write_fmt` rather than `to_string` to avoid heap allocation leading to misleading results (credit to @RazrFalcon).
+
+## [0.4.2] - 2019-06-24
+### Added
+- Comprehensive continuous integration unittests for numerous platforms, based off the [trust](https://github.com/japaric/trust) templates.
+- Added known issue for a non-default, lossy setting on armv6 architectures.
+
+### Changed
+- Bug fix for 32-bit targets.
+
+## [0.4.1] - 2019-06-20
+### Added
+- Backwards compatible support for Rustc 1.24.0.
+
+### Changed
+- Worked around a bug in the internal float formatter where `&arr[idx]` creates a local copy in Rust versions before 1.28.0, creating a dangling reference after the scope ends. For more details, see `cached_grisu_power` in `/lexical-core/src/ftoa/grisu2.rs` .

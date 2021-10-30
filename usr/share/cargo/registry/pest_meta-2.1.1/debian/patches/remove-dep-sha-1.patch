@@ -1,0 +1,15 @@
+sha-1 is only used in the build script, which is executed before the crate is
+packaged for crates.io and which is not included in the crates.io package.
+Index: pest-meta/Cargo.toml
+===================================================================
+--- pest-meta.orig/Cargo.toml
++++ pest-meta/Cargo.toml
+@@ -29,8 +29,6 @@ version = "1.0"
+ 
+ [dependencies.pest]
+ version = "2.1.0"
+-[build-dependencies.sha-1]
+-version = "0.8"
+ [badges.codecov]
+ repository = "pest-parser/pest"
+ 

@@ -1,0 +1,11 @@
+Index: generator/build.rs
+===================================================================
+--- generator.orig/build.rs
++++ generator/build.rs
+@@ -80,4 +80,6 @@ fn main() {
+ 
+     // create the static asm libary
+     config.compile("libasm.a");
++
++    println!("dh-cargo:deb-built-using=asm=0={}", env::var("CARGO_MANIFEST_DIR").unwrap());
+ }

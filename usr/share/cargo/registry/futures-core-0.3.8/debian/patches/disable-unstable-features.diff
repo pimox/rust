@@ -1,0 +1,12 @@
+Index: futures-core/Cargo.toml
+===================================================================
+--- futures-core.orig/Cargo.toml
++++ futures-core/Cargo.toml
+@@ -27,7 +27,5 @@ all-features = true
+ 
+ [features]
+ alloc = []
+-cfg-target-has-atomic = []
+ default = ["std"]
+ std = ["alloc"]
+-unstable = []

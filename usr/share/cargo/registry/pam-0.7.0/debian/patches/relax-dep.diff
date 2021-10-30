@@ -1,0 +1,13 @@
+Index: pam/Cargo.toml
+===================================================================
+--- pam.orig/Cargo.toml
++++ pam/Cargo.toml
+@@ -28,7 +28,7 @@ version = "^0.2"
+ version = "^0.5"
+ 
+ [dependencies.users]
+-version = "^0.8"
++version = ">=0.8, <0.11"
+ [dev-dependencies.rpassword]
+ version = "2.0"
+ [badges.travis-ci]

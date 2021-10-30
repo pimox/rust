@@ -1,0 +1,43 @@
+From a5b958d10c63e4c27b69f821725d60e9e6d35a2e Mon Sep 17 00:00:00 2001
+From: Wolfgang Bumiller <w.bumiller@proxmox.com>
+Date: Wed, 13 Jan 2021 09:59:58 +0100
+Subject: [PATCH pxar 1/2] fix example
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Signed-off-by: Wolfgang Bumiller <w.bumiller@proxmox.com>
+---
+ examples/apxar.rs | 15 +--------------
+ 1 file changed, 1 insertion(+), 14 deletions(-)
+
+diff --git a/examples/apxar.rs b/examples/apxar.rs
+index 03c7590..0c62242 100644
+--- a/examples/apxar.rs
++++ b/examples/apxar.rs
+@@ -12,21 +12,8 @@ async fn main() {
+     let mut reader = Decoder::from_tokio(file)
+         .await
+         .expect("failed to open pxar archive contents");
+-    let mut i = 0;
+-    while let Some(entry) = reader.next().await {
+-        println!("{:#?}", entry.expect("failed to parse entry").path());
+-        i += 1;
+-        if i == 2 {
+-            break;
+-        }
+-    }
+ 
+-    // Use a Stream for the remaining entries:
+-    use futures::stream::StreamExt;
+-
+-    let mut stream = reader.into_stream();
+-
+-    while let Some(entry) = stream.next().await {
++    while let Some(entry) = reader.next().await {
+         println!("{:#?}", entry.expect("failed to parse entry").path());
+     }
+ }
+-- 
+2.20.1
+

@@ -1,0 +1,10 @@
+Index: vte/Cargo.toml
+===================================================================
+--- vte.orig/Cargo.toml
++++ vte/Cargo.toml
+@@ -21,4 +21,4 @@ keywords = ["ansi", "vte", "parser", "te
+ license = "Apache-2.0 OR MIT"
+ repository = "https://github.com/jwilm/vte"
+ [dependencies.utf8parse]
+-version = "0.1"
++version = ">= 0.1, < 0.3"

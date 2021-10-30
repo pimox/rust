@@ -1,0 +1,6 @@
+The Debian version of the backtrace-sys crate links against the libbacktrace.a
+provided by the libgcc-*-dev package in active use by Debian, which is updated
+more frequently than the rust upstream version of the code.
+
+The rust bugfixes to their fork of libbacktrace are mostly not relevant for
+Debian and are for other platforms such as windows.

@@ -1,0 +1,13 @@
+Index: log/Cargo.toml
+===================================================================
+--- log.orig/Cargo.toml
++++ log/Cargo.toml
+@@ -34,7 +34,7 @@ harness = false
+ name = "macros"
+ harness = true
+ [dependencies.cfg-if]
+-version = "0.1.2"
++version = "1.0"
+ 
+ [dependencies.serde]
+ version = "1.0"

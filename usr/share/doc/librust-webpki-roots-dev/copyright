@@ -1,0 +1,20 @@
+
+Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+Upstream-Name: webpki-roots
+Upstream-Contact: Joseph Birr-Pixton <jpixton@gmail.com>
+Source: https://github.com/ctz/webpki-roots
+
+Files: *
+Copyright:
+ 2015-2019 Brian Smith <brian@briansmith.org>
+ 2016 Joseph Birr-Pixton <jpixton@gmail.com>
+License: MPL-2.0
+
+Files: debian/*
+Copyright:
+ 2021 Debian Rust Maintainers <pkg-rust-maintainers@alioth-lists.debian.net>
+ 2021 Fabian Grünbichler <f.gruenbichler@proxmox.com>
+License: MPL-2.0
+
+License: MPL-2.0
+ Debian systems provide the MPL 2.0 in /usr/share/common-licenses/MPL-2.0

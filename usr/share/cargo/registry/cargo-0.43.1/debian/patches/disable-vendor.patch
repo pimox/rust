@@ -1,0 +1,11 @@
+--- a/Cargo.toml
++++ b/Cargo.toml
+@@ -196,7 +196,7 @@
+ [features]
+ deny-warnings = []
+ pretty-env-logger = ["pretty_env_logger"]
+-vendored-openssl = ["openssl/vendored"]
++vendored-openssl = ["openssl"]
+ [target."cfg(target_os = \"macos\")".dependencies.core-foundation]
+ version = "0.7.0"
+ features = ["mac_os_10_7_support"]

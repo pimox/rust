@@ -1,0 +1,13 @@
+Index: backtrace/Cargo.toml
+===================================================================
+--- backtrace.orig/Cargo.toml
++++ backtrace/Cargo.toml
+@@ -65,7 +65,7 @@ version = "0.1.32"
+ optional = true
+ 
+ [dependencies.cfg-if]
+-version = "0.1.10"
++version = "1.0"
+ 
+ [dependencies.compiler_builtins]
+ version = "0.1.2"

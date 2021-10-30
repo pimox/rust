@@ -1,0 +1,2 @@
+0001-allow-overriding-maintainer-via-debcargo.toml.patch
+0002-implement-local-crate-support.patch

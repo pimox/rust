@@ -1,0 +1,17 @@
+Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+Upstream-Name: webauthn-rs
+Upstream-Contact: William Brown <william@blackhats.net.au>
+Source: https://github.com/kanidm/webauthn-rs
+
+Files: *
+Copyright: 2019-2020 William Brown <william@blackhats.net.au>
+License: MPL-2.0
+
+Files: debian/*
+Copyright:
+ 2020 Debian Rust Maintainers <pkg-rust-maintainers@alioth-lists.debian.net>
+ 2020 Proxmox Support Team <support@proxmox.com>
+License: MPL-2.0
+
+License: MPL-2.0
+ Debian systems provide the MPL 2.0 in /usr/share/common-licenses/MPL-2.0

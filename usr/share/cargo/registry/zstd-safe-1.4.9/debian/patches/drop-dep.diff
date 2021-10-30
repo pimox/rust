@@ -1,0 +1,14 @@
+Index: zstd-safe-1/Cargo.toml
+===================================================================
+--- zstd-safe-1.orig/Cargo.toml
++++ zstd-safe-1/Cargo.toml
+@@ -28,7 +28,8 @@ version = "1.4.10"
+ default-features = false
+ 
+ [features]
+-bindgen = ["zstd-sys/bindgen"]
++# bindgen is always enabled in packaged version
++bindgen = []
+ default = ["legacy"]
+ experimental = ["zstd-sys/experimental"]
+ legacy = ["zstd-sys/legacy"]

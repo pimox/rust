@@ -1,0 +1,28 @@
+Description:  Remove "rustc-dep-of-std" featureset package
+ The dependencies are not available in Debian.
+Author: Peter Michael Green <plugwash@debian.org>
+
+---
+The information above should follow the Patch Tagging Guidelines, please
+checkout http://dep.debian.net/deps/dep3/ to learn about the format. Here
+are templates for supplementary fields that you might want to add:
+
+Origin: <vendor|upstream|other>, <url of original patch>
+Bug: <url in upstream bugtracker>
+Bug-Debian: https://bugs.debian.org/<bugnumber>
+Bug-Ubuntu: https://launchpad.net/bugs/<bugnumber>
+Forwarded: <no|not-needed|url proving that it has been forwarded>
+Reviewed-By: <name and email of someone who approved the patch>
+Last-Update: 2020-04-13
+
+--- rust-backtrace-0.3.44.orig/Cargo.toml
++++ rust-backtrace-0.3.44/Cargo.toml
+@@ -120,7 +120,7 @@ gimli-symbolize = ["addr2line", "findshl
+ kernel32 = []
+ libbacktrace = ["backtrace-sys"]
+ libunwind = []
+-rustc-dep-of-std = ["backtrace-sys/rustc-dep-of-std", "cfg-if/rustc-dep-of-std", "core", "compiler_builtins", "libc/rustc-dep-of-std", "rustc-demangle/rustc-dep-of-std"]
++#rustc-dep-of-std = ["backtrace-sys/rustc-dep-of-std", "cfg-if/rustc-dep-of-std", "core", "compiler_builtins", "libc/rustc-dep-of-std", "rustc-demangle/rustc-dep-of-std"]
+ serialize-rustc = ["rustc-serialize"]
+ serialize-serde = ["serde"]
+ std = []

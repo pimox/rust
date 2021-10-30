@@ -1,0 +1,13 @@
+Index: zstd-sys/Cargo.toml
+===================================================================
+--- zstd-sys.orig/Cargo.toml
++++ zstd-sys/Cargo.toml
+@@ -30,7 +30,7 @@ doctest = false
+ [dependencies.libc]
+ version = "0.2.45"
+ [build-dependencies.bindgen]
+-version = "0.56"
++version = "0.55"
+ 
+ [build-dependencies.itertools]
+ version = "0.9"

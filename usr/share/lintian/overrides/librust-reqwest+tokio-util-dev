@@ -1,0 +1,1 @@
+librust-reqwest+tokio-util-dev binary: empty-rust-library-declares-provides *

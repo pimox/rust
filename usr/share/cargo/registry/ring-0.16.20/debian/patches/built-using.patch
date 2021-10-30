@@ -1,0 +1,12 @@
+--- a/build.rs
++++ b/build.rs
+@@ -248,6 +248,9 @@
+ const MSVC_OBJ_EXT: &str = "obj";
+ 
+ fn main() {
++    println!("dh-cargo:deb-built-using=ring-core=0={}", std::env::var("CARGO_MANIFEST_DIR").unwrap());
++    println!("dh-cargo:deb-built-using=ring-test=0={}", std::env::var("CARGO_MANIFEST_DIR").unwrap());
++
+     if let Ok(package_name) = std::env::var("CARGO_PKG_NAME") {
+         if package_name == "ring" {
+             ring_build_rs_main();

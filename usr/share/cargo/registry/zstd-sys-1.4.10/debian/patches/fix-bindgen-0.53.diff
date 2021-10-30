@@ -1,0 +1,12 @@
+Index: zstd-sys-1/build.rs
+===================================================================
+--- zstd-sys-1.orig/build.rs
++++ zstd-sys-1/build.rs
+@@ -12,6 +12,7 @@ fn generate_bindings(defs: Vec<&str>, he
+     let bindings = bindgen::Builder::default()
+         .header("zstd.h")
+         .blacklist_type("max_align_t")
++        .size_t_is_usize(true)
+         .use_core()
+         .rustified_enum(".*")
+         .clang_args(

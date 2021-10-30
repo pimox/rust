@@ -1,0 +1,88 @@
+From 77b9e491f1f7636f5151c75258f2d68d5e4fccce Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Fabian=20Gr=C3=BCnbichler?= <f.gruenbichler@proxmox.com>
+Date: Mon, 13 Jan 2020 13:59:59 +0100
+Subject: [PATCH 1/2] allow overriding maintainer via debcargo.toml
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Signed-off-by: Fabian Grünbichler <f.gruenbichler@proxmox.com>
+---
+ debcargo.toml.example |  8 ++++++++
+ src/config.rs         | 11 +++++++++++
+ src/debian/control.rs |  4 ++++
+ 3 files changed, 23 insertions(+)
+
+diff --git a/debcargo.toml.example b/debcargo.toml.example
+index fca66db..9080ef6 100644
+--- a/debcargo.toml.example
++++ b/debcargo.toml.example
+@@ -75,6 +75,14 @@ uploaders = [ "foo bar <foo@debian.org>" ]
+ # Override or provide missing homepage for crate
+ #homepage = "https://clap.rs"
+ 
++# Maintainer
++#
++# Defaults to pkg-rust-team, should only be overriden with care. If overridden,
++# vcs_* should also be overridden, otherwise they point the rust team's salsa
++# project.
++#
++#maintainer= "PLACEHOLDER"
++
+ # Override the VCS entries.
+ # By default this points to a relevant subdirectory underneath the main
+ # repository for debcargo config files, owned by the Debian Rust Maintainers:
+diff --git a/src/config.rs b/src/config.rs
+index 612dd78..fa13c45 100644
+--- a/src/config.rs
++++ b/src/config.rs
+@@ -32,6 +32,7 @@ pub struct SourceOverride {
+     section: Option<String>,
+     policy: Option<String>,
+     homepage: Option<String>,
++    maintainer: Option<String>,
+     vcs_git: Option<String>,
+     vcs_browser: Option<String>,
+     build_depends: Option<Vec<String>>,
+@@ -118,6 +119,15 @@ impl Config {
+         None
+     }
+ 
++    pub fn maintainer(&self) -> Option<&str> {
++        if let Some(ref s) = self.source {
++            if let Some(ref maintainer) = s.maintainer {
++                return Some(maintainer)
++            }
++        }
++        None
++    }
++
+     pub fn build_depends(&self) -> Option<&Vec<String>> {
+         self.source.as_ref().and_then(|s| s.build_depends.as_ref())
+     }
+@@ -126,6 +136,7 @@ impl Config {
+         self.uploaders.as_ref()
+     }
+ 
++
+     pub fn build_depends_excludes(&self) -> Option<&Vec<String>> {
+         self.source
+             .as_ref()
+diff --git a/src/debian/control.rs b/src/debian/control.rs
+index a12fa49..23d4714 100644
+--- a/src/debian/control.rs
++++ b/src/debian/control.rs
+@@ -220,6 +220,10 @@ impl Source {
+             self.homepage = homepage.to_string();
+         }
+ 
++        if let Some(maintainer) = config.maintainer() {
++            self.maintainer = maintainer.to_string();
++        }
++
+         if let Some(vcs_git) = config.vcs_git() {
+             self.vcs_git = vcs_git.to_string();
+         }
+-- 
+2.20.1
+

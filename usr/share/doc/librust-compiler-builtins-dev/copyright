@@ -1,0 +1,205 @@
+Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+Upstream-Name: compiler_builtins
+Upstream-Contact: Jorge Aparicio <japaricious@gmail.com>
+Source: https://github.com/rust-lang-nursery/compiler-builtins
+
+Files: *
+Copyright:
+ 2017-2020 The Rust Project Developers
+ 2018-2019 Jorge Aparicio <japaricious@gmail.com>
+License: MIT or Apache-2.0
+Comment:
+ This project is a Rust translation of the older C "compiler-rt" project from
+ the LLVM project.
+ .
+ README.md mentions references to the "University of Illinois "BSD-Like"
+ license" which is an older name for the NCSA license, which is the old license
+ of compiler-rt. This information is obsolete - no part of compiler-rt exists
+ today in this crate, and so the older copyright holders and license do not
+ actually apply to the current version of the code.
+ .
+ See discussion:
+ https://github.com/rust-lang/compiler-builtins/issues/307
+ .
+ In summary, MIT or Apache-2.0 is therefore the correct license for this crate,
+ minus the libm embedded crate described separately below.
+
+Files: src/riscv32.rs
+Copyright:
+ 2009-2020 Free Software Foundation, Inc.
+License: GPL-3+ with GCC-Runtime-Library exception
+Comment:
+ Contributed by Embecosm on behalf of Adapteva, Inc.
+
+Files: libm/*
+Copyright:
+ 2017-2020 The Rust Project Developers
+ 2018-2019 Jorge Aparicio <japaricious@gmail.com>
+ 2005-2011 David Schultz <das@FreeBSD.ORG>
+ 1993-2004 Sun Microsystems
+License: MIT or Apache-2.0, and SunCustom, and BSD-2-Clause
+Comment:
+ This project is a Rust translation of the older C "libm" project from MUSL
+ and FreeBSD, which itself is derived from older FOSS code copyrighted by Sun.
+ .
+ Some file headers make reference to other copyright holders but they are in
+ fact copyright holders for the original C files from which this project is
+ derived (LLVM and libm), none of which remain in this source code. So those
+ original copyright holders do not hold copyright on this derivative.
+ .
+ One exception to this is that some comments were copied verbatim into the Rust
+ code. Hence, the older copyright applies to those comments. "MIT or
+ Apache-2.0" applies to all the Rust code excluding these comments.
+ .
+ See discussion:
+ https://alioth-lists.debian.net/pipermail/pkg-rust-maintainers/2020-February/009954.html
+ https://github.com/rust-lang/libm/issues/215
+
+Files: debian/*
+Copyright:
+ 2019 Debian Rust Maintainers <pkg-rust-maintainers@alioth-lists.debian.net>
+ 2019 kpcyrd <git@rxv.cc>
+License: MIT or Apache-2.0
+
+License: Apache-2.0
+ Debian systems provide the Apache 2.0 license in
+ /usr/share/common-licenses/Apache-2.0
+
+License: MIT
+ Permission is hereby granted, free of charge, to any person obtaining a copy
+ of this software and associated documentation files (the "Software"), to deal
+ in the Software without restriction, including without limitation the rights
+ to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ copies of the Software, and to permit persons to whom the Software is
+ furnished to do so, subject to the following conditions:
+ .
+ The above copyright notice and this permission notice shall be included in all
+ copies or substantial portions of the Software.
+ .
+ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL THE
+ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ SOFTWARE.
+
+License: BSD-2-Clause
+ Redistribution and use in source and binary forms, with or without
+ modification, are permitted provided that the following conditions
+ are met:
+ 1. Redistributions of source code must retain the above copyright
+    notice, this list of conditions and the following disclaimer.
+ 2. Redistributions in binary form must reproduce the above copyright
+    notice, this list of conditions and the following disclaimer in the
+    documentation and/or other materials provided with the distribution.
+ .
+ THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND
+ ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE
+ FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+ OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+ HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+ LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+ OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
+ SUCH DAMAGE.
+
+License: SunCustom
+ Developed at SunPro, a Sun Microsystems, Inc. business.
+ Permission to use, copy, modify, and distribute this
+ software is freely granted, provided that this notice
+ is preserved.
+
+License: GPL-3+ with GCC-Runtime-Library exception
+ This file is free software; you can redistribute it and/or modify it
+ under the terms of the GNU General Public License as published by the
+ Free Software Foundation; either version 3, or (at your option) any
+ later version.
+ .
+ This file is distributed in the hope that it will be useful, but
+ WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ General Public License for more details.
+ .
+ Under Section 7 of GPL version 3, you are granted additional
+ permissions described in the GCC Runtime Library Exception, version
+ 3.1, as published by the Free Software Foundation.
+ .
+ You should have received a copy of the GNU General Public License and
+ a copy of the GCC Runtime Library Exception along with this program;
+ see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
+ <http://www.gnu.org/licenses/>.  */
+ .
+ Debian systems provide the GPL-3 license in
+ /usr/share/common-licenses/GPL-3
+ .
+ GCC RUNTIME LIBRARY EXCEPTION
+ Version 3.1, 31 March 2009
+ .
+ Copyright © 2009 Free Software Foundation, Inc. <https://fsf.org/>
+ .
+ Everyone is permitted to copy and distribute verbatim copies of this license
+ document, but changing it is not allowed.
+ .
+ This GCC Runtime Library Exception ("Exception") is an additional permission
+ under section 7 of the GNU General Public License, version 3 ("GPLv3"). It
+ applies to a given file (the "Runtime Library") that bears a notice placed by
+ the copyright holder of the file stating that the file is governed by GPLv3
+ along with this Exception.
+ .
+ When you use GCC to compile a program, GCC may combine portions of certain GCC
+ header files and runtime libraries with the compiled program. The purpose of
+ this Exception is to allow compilation of non-GPL (including proprietary)
+ programs to use, in this way, the header files and runtime libraries covered
+ by this Exception.
+ .
+ 0. Definitions.
+ .
+ A file is an "Independent Module" if it either requires the Runtime Library
+ for execution after a Compilation Process, or makes use of an interface
+ provided by the Runtime Library, but is not otherwise based on the Runtime
+ Library.
+ .
+ "GCC" means a version of the GNU Compiler Collection, with or without
+ modifications, governed by version 3 (or a specified later version) of the GNU
+ General Public License (GPL) with the option of using any subsequent versions
+ published by the FSF.
+ .
+ "GPL-compatible Software" is software whose conditions of propagation,
+ modification and use would permit combination with GCC in accord with the
+ license of GCC.
+ .
+ "Target Code" refers to output from any compiler for a real or virtual target
+ processor architecture, in executable form or suitable for input to an
+ assembler, loader, linker and/or execution phase. Notwithstanding that, Target
+ Code does not include data in any format that is used as a compiler
+ intermediate representation, or used for producing a compiler intermediate
+ representation.
+ .
+ The "Compilation Process" transforms code entirely represented in
+ non-intermediate languages designed for human-written code, and/or in Java
+ Virtual Machine byte code, into Target Code. Thus, for example, use of source
+ code generators and preprocessors need not be considered part of the
+ Compilation Process, since the Compilation Process can be understood as
+ starting with the output of the generators or preprocessors.
+ .
+ A Compilation Process is "Eligible" if it is done using GCC, alone or with
+ other GPL-compatible software, or if it is done without using any work based
+ on GCC. For example, using non-GPL-compatible Software to optimize any GCC
+ intermediate representations would not qualify as an Eligible Compilation
+ Process.
+ .
+ 1. Grant of Additional Permission.
+ You have permission to propagate a work of Target Code formed by combining the
+ Runtime Library with Independent Modules, even if such propagation would
+ otherwise violate the terms of GPLv3, provided that all Target Code was
+ generated by Eligible Compilation Processes. You may then convey such a
+ combination under terms of your choice, consistent with the licensing of the
+ Independent Modules.
+ .
+ 2. No Weakening of GCC Copyleft.
+ The availability of this Exception does not imply any general presumption that
+ third-party software is unaffected by the copyleft requirements of the license
+ of GCC.

@@ -1,0 +1,13 @@
+Index: hyper-rustls/Cargo.toml
+===================================================================
+--- hyper-rustls.orig/Cargo.toml
++++ hyper-rustls/Cargo.toml
+@@ -34,7 +34,7 @@ name = "server"
+ path = "examples/server.rs"
+ required-features = ["tokio-runtime"]
+ [dependencies.ct-logs]
+-version = "^0.8"
++version = "^0.9"
+ optional = true
+ 
+ [dependencies.futures-util]

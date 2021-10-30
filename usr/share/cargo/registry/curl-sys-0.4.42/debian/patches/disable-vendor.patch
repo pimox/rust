@@ -1,0 +1,29 @@
+Index: curl-sys/Cargo.toml
+===================================================================
+--- curl-sys.orig/Cargo.toml
++++ curl-sys/Cargo.toml
+@@ -51,7 +51,7 @@ protocol-ftp = []
+ spnego = []
+ ssl = ["openssl-sys"]
+ static-curl = []
+-static-ssl = ["openssl-sys/vendored"]
++static-ssl = ["openssl-sys"]
+ upkeep_7_62_0 = []
+ zlib-ng-compat = ["libz-sys/zlib-ng", "static-curl"]
+ [target."cfg(all(unix, not(target_os = \"macos\")))".dependencies.openssl-sys]
+Index: curl-sys/build.rs
+===================================================================
+--- curl-sys.orig/build.rs
++++ curl-sys/build.rs
+@@ -27,8 +27,9 @@ fn main() {
+         return println!("cargo:rustc-flags=-l curl");
+     }
+ 
+-    // If the static-curl feature is disabled, probe for a system-wide libcurl.
+-    if !cfg!(feature = "static-curl") {
++    // On Debian, always probe for a system-wide libcurl even when linking statically
++    if true {
++        if cfg!(feature = "static-curl") { println!("cargo:static=1"); }
+         // OSX ships libcurl by default, so we just use that version
+         // so long as it has the right features enabled.
+         if target.contains("apple") && (!cfg!(feature = "http2") || curl_config_reports_http2()) {

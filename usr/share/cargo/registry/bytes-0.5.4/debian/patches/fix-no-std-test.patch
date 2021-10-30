@@ -1,0 +1,88 @@
+Index: bytes/tests/test_buf.rs
+===================================================================
+--- bytes.orig/tests/test_buf.rs
++++ bytes/tests/test_buf.rs
+@@ -1,6 +1,7 @@
+ #![deny(warnings, rust_2018_idioms)]
+ 
+ use bytes::Buf;
++#[cfg(feature = "std")]
+ use std::io::IoSlice;
+ 
+ #[test]
+@@ -43,6 +44,7 @@ fn test_get_u16_buffer_underflow() {
+ }
+ 
+ #[test]
++#[cfg(feature = "std")]
+ fn test_bufs_vec() {
+     let buf = &b"hello world"[..];
+ 
+Index: bytes/tests/test_buf_mut.rs
+===================================================================
+--- bytes.orig/tests/test_buf_mut.rs
++++ bytes/tests/test_buf_mut.rs
+@@ -1,6 +1,8 @@
+ #![deny(warnings, rust_2018_idioms)]
+ 
+-use bytes::{buf::IoSliceMut, BufMut, BytesMut};
++#[cfg(feature = "std")]
++use bytes::buf::IoSliceMut;
++use bytes::{BufMut, BytesMut};
+ use std::usize;
+ use std::fmt::Write;
+ 
+@@ -66,6 +68,7 @@ fn test_clone() {
+ }
+ 
+ #[test]
++#[cfg(feature = "std")]
+ fn test_bufs_vec_mut() {
+     let b1: &mut [u8] = &mut [];
+     let b2: &mut [u8] = &mut [];
+Index: bytes/tests/test_chain.rs
+===================================================================
+--- bytes.orig/tests/test_chain.rs
++++ bytes/tests/test_chain.rs
+@@ -2,6 +2,7 @@
+ 
+ use bytes::{Buf, BufMut, Bytes};
+ use bytes::buf::{BufExt, BufMutExt};
++#[cfg(feature = "std")]
+ use std::io::IoSlice;
+ 
+ #[test]
+@@ -43,6 +44,7 @@ fn iterating_two_bufs() {
+ }
+ 
+ #[test]
++#[cfg(feature = "std")]
+ fn vectored_read() {
+     let a = Bytes::from(&b"hello"[..]);
+     let b = Bytes::from(&b"world"[..]);
+Index: bytes/tests/test_reader.rs
+===================================================================
+--- bytes.orig/tests/test_reader.rs
++++ bytes/tests/test_reader.rs
+@@ -1,10 +1,13 @@
+ #![deny(warnings, rust_2018_idioms)]
+ 
++#[cfg(feature = "std")]
+ use std::io::{BufRead, Read};
+ 
++#[cfg(feature = "std")]
+ use bytes::buf::{BufExt};
+ 
+ #[test]
++#[cfg(feature = "std")]
+ fn read() {
+     let buf1 = &b"hello "[..];
+     let buf2 = &b"world"[..];
+@@ -15,6 +18,7 @@ fn read() {
+ }
+ 
+ #[test]
++#[cfg(feature = "std")]
+ fn buf_read() {
+     let buf1 = &b"hell"[..];
+     let buf2 = &b"o\nworld"[..];

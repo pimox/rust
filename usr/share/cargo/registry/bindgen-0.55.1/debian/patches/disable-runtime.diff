@@ -1,0 +1,13 @@
+Index: bindgen/Cargo.toml
+===================================================================
+--- bindgen.orig/Cargo.toml
++++ bindgen/Cargo.toml
+@@ -101,7 +101,7 @@ version = "0.1"
+ version = "0.1"
+ 
+ [features]
+-default = ["logging", "clap", "runtime", "which-rustfmt"]
++default = ["logging", "clap", "which-rustfmt"]
+ logging = ["env_logger", "log"]
+ runtime = ["clang-sys/runtime"]
+ static = ["clang-sys/static"]

@@ -1,0 +1,257 @@
+From e7ff53ad2474b53ce93658d3fbfd8c8b00a432ee Mon Sep 17 00:00:00 2001
+From: Stefan Reiter <s.reiter@proxmox.com>
+Date: Tue, 20 Oct 2020 16:07:24 +0200
+Subject: [PATCH] add DepIterator to list dependencies of package versions
+
+Mostly the same boilerplate as the other iterators, but with a special
+SinglePkgView type introduced to allow direct access to the nested
+PkgIterator returned from target_pkg.
+---
+ apt-pkg-c/lib.cpp |  64 +++++++++++++++++++++++++++++
+ src/raw.rs        |  18 +++++++++
+ src/sane.rs       | 100 ++++++++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 182 insertions(+)
+
+diff --git a/apt-pkg-c/lib.cpp b/apt-pkg-c/lib.cpp
+index d3901fa..86bce58 100644
+--- a/apt-pkg-c/lib.cpp
++++ b/apt-pkg-c/lib.cpp
+@@ -41,6 +41,17 @@ struct PVerIterator {
+     PCache *cache;
+ };
+ 
++struct PDepIterator {
++    // Owned by us.
++    pkgCache::DepIterator iterator;
++
++    // Borrowed from PCache.
++    pkgCache::VerIterator *ver;
++
++    // Borrow of "static" PCache.
++    PCache *cache;
++};
++
+ struct PVerFileIterator {
+     // Owned by us.
+     pkgCache::VerFileIterator iterator;
+@@ -103,6 +114,20 @@ extern "C" {
+     int32_t ver_iter_priority(PVerIterator *iterator);
+ #endif
+ 
++    // dep_iter creation and deletion
++    PDepIterator *ver_iter_dep_iter(PVerIterator *iterator);
++    void dep_iter_release(PDepIterator *iterator);
++
++    // dep_iter mutation
++    void dep_iter_next(PDepIterator *iterator);
++    bool dep_iter_end(PDepIterator *iterator);
++
++    // dep_iter access
++    PPkgIterator *dep_iter_target_pkg(PDepIterator *iterator);
++    const char *dep_iter_target_ver(PDepIterator *iterator);
++    const char *dep_iter_comp_type(PDepIterator *iterator);
++    const char *dep_iter_dep_type(PDepIterator *iterator);
++
+     // ver_file_iter creation and deletion
+     PVerFileIterator *ver_iter_ver_file_iter(PVerIterator *iterator);
+     void ver_file_iter_release(PVerFileIterator *iterator);
+@@ -283,6 +308,45 @@ const char *ver_iter_arch(PVerIterator *wrapper) {
+ }
+ 
+ 
++PDepIterator *ver_iter_dep_iter(PVerIterator *wrapper) {
++    PDepIterator *new_wrapper = new PDepIterator();
++    new_wrapper->iterator = wrapper->iterator.DependsList();
++    new_wrapper->cache = wrapper->cache;
++    return new_wrapper;
++}
++
++void dep_iter_release(PDepIterator *wrapper) {
++    delete wrapper;
++}
++
++void dep_iter_next(PDepIterator *wrapper) {
++    ++wrapper->iterator;
++}
++
++bool dep_iter_end(PDepIterator *wrapper) {
++    return wrapper->iterator.end();
++}
++
++PPkgIterator *dep_iter_target_pkg(PDepIterator *wrapper) {
++    PPkgIterator *new_wrapper = new PPkgIterator();
++    new_wrapper->iterator = wrapper->iterator.TargetPkg();
++    new_wrapper->cache = wrapper->cache;
++    return new_wrapper;
++}
++
++const char *dep_iter_target_ver(PDepIterator *wrapper) {
++    return wrapper->iterator.TargetVer();
++}
++
++const char *dep_iter_comp_type(PDepIterator *wrapper) {
++    return wrapper->iterator.CompType();
++}
++
++const char *dep_iter_dep_type(PDepIterator *wrapper) {
++    return wrapper->iterator.DepType();
++}
++
++
+ PVerFileIterator *ver_iter_ver_file_iter(PVerIterator *wrapper) {
+     PVerFileIterator *new_wrapper = new PVerFileIterator();
+     new_wrapper->iterator = wrapper->iterator.FileList();
+diff --git a/src/raw.rs b/src/raw.rs
+index 4211fb7..28bcad9 100644
+--- a/src/raw.rs
++++ b/src/raw.rs
+@@ -11,6 +11,7 @@ use libc::c_void;
+ pub type PCache = *mut c_void;
+ pub type PPkgIterator = *mut c_void;
+ pub type PVerIterator = *mut c_void;
++pub type PDepIterator = *mut c_void;
+ pub type PVerFileIterator = *mut c_void;
+ pub type PPkgFileIterator = *mut c_void;
+ pub type PVerFileParser = *mut c_void;
+@@ -78,6 +79,23 @@ extern "C" {
+     #[cfg(not(feature = "ye-olde-apt"))]
+     pub fn ver_iter_priority(iterator: PVerIterator) -> i32;
+ 
++    // Dependency iterators
++    // ====================
++
++    pub fn ver_iter_dep_iter(iterator: PVerIterator) -> PDepIterator;
++    pub fn dep_iter_release(iterator: PDepIterator);
++
++    pub fn dep_iter_next(iterator: PDepIterator);
++    pub fn dep_iter_end(iterator: PDepIterator) -> bool;
++
++    // Dependency accessors
++    // ====================
++
++    pub fn dep_iter_target_pkg(iterator: PDepIterator) -> PPkgIterator;
++    pub fn dep_iter_target_ver(iterator: PDepIterator) -> *const c_char;
++    pub fn dep_iter_comp_type(iterator: PDepIterator) -> *const c_char;
++    pub fn dep_iter_dep_type(iterator: PDepIterator) -> *const c_char;
++
+     pub fn ver_iter_ver_file_iter(iterator: PVerIterator) -> PVerFileIterator;
+     pub fn ver_file_iter_release(iterator: PVerFileIterator);
+ 
+diff --git a/src/sane.rs b/src/sane.rs
+index eb2b47c..fa897b1 100644
+--- a/src/sane.rs
++++ b/src/sane.rs
+@@ -181,6 +181,26 @@ impl<'c> PkgView<'c> {
+     }
+ }
+ 
++/// Represents a single PkgView without associated PkgIterator. Derefs to
++/// regular PkgView and releases the internal iterator on drop.
++pub struct SinglePkgView<'c> {
++    view: PkgView<'c>,
++}
++
++impl<'c> std::ops::Deref for SinglePkgView<'c> {
++    type Target = PkgView<'c>;
++
++    fn deref(&self) -> &Self::Target {
++        &self.view
++    }
++}
++
++impl<'c> Drop for SinglePkgView<'c> {
++    fn drop(&mut self) {
++        unsafe { raw::pkg_iter_release(self.view.ptr); }
++    }
++}
++
+ /// An "iterator"/pointer to a point in a version list.
+ pub struct VerIterator<'c> {
+     cache: PhantomData<&'c MutexGuard<'c, raw::CacheHolder>>,
+@@ -271,6 +291,86 @@ impl<'c> VerView<'c> {
+             },
+         }
+     }
++
++    pub fn dep_iter(&self) -> CIterator<DepIterator> {
++        CIterator {
++            first: true,
++            raw: DepIterator {
++                cache: PhantomData,
++                ptr: unsafe { raw::ver_iter_dep_iter(self.ptr) },
++            },
++        }
++    }
++}
++
++/// An "iterator"/pointer to a point in a dependency list.
++pub struct DepIterator<'c> {
++    cache: PhantomData<&'c MutexGuard<'c, raw::CacheHolder>>,
++    ptr: raw::PDepIterator,
++}
++
++pub struct DepView<'c> {
++    cache: PhantomData<&'c MutexGuard<'c, raw::CacheHolder>>,
++    ptr: raw::PDepIterator,
++}
++
++impl<'c> RawIterator for DepIterator<'c> {
++    type View = DepView<'c>;
++
++    fn is_end(&self) -> bool {
++        unsafe { raw::dep_iter_end(self.ptr) }
++    }
++
++    fn next(&mut self) {
++        unsafe { raw::dep_iter_next(self.ptr) }
++    }
++
++    fn as_view(&self) -> Self::View {
++        assert!(!self.is_end());
++
++        DepView {
++            ptr: self.ptr,
++            cache: self.cache,
++        }
++    }
++
++    fn release(&mut self) {
++        unsafe { raw::dep_iter_release(self.ptr) }
++    }
++}
++
++/// Actual accessors
++impl<'c> DepView<'c> {
++    pub fn target_pkg(&self) -> SinglePkgView {
++        let ptr = unsafe { raw::dep_iter_target_pkg(self.ptr) };
++        SinglePkgView {
++            view: PkgView {
++                cache: self.cache,
++                ptr,
++            }
++        }
++    }
++
++    pub fn target_ver(&self) -> String {
++        unsafe {
++            make_owned_ascii_string(raw::dep_iter_target_ver(self.ptr))
++                .expect("dependency always has target version")
++        }
++    }
++
++    pub fn comp_type(&self) -> String {
++        unsafe {
++            make_owned_ascii_string(raw::dep_iter_comp_type(self.ptr))
++                .expect("dependency always has comp type")
++        }
++    }
++
++    pub fn dep_type(&self) -> String {
++        unsafe {
++            make_owned_ascii_string(raw::dep_iter_dep_type(self.ptr))
++                .expect("dependency always has dep type")
++        }
++    }
+ }
+ 
+ /// An "iterator"/pointer to a point in a version's file list(?).

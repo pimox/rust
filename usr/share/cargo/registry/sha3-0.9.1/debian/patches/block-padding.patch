@@ -1,0 +1,30 @@
+This patch exists because of https://bugs.debian.org/977627
+
+block-buffer's "block-padding" feature was removed in debian -- it's
+no longer optional -- due to the constraints around empty features
+negotiated with the FTP team.
+
+However, no additional Provides: was added, and attempts to explicitly
+add an empty named feature to block-buffer with "Provides" end up
+failing with:
+
+Something failed: failed to parse manifest at `…/debcargo-conf/build/block-buffer/Cargo.toml`
+
+Caused by: Features and dependencies cannot have the same name: `block-padding`
+
+So instead, as a workaround, we just make an explicit dependency also
+on block-padding here in sha3.
+
+--- a/Cargo.toml
++++ b/Cargo.toml
+@@ -24,7 +24,9 @@
+ repository = "https://github.com/RustCrypto/hashes"
+ [dependencies.block-buffer]
+ version = "0.9"
+-features = ["block-padding"]
++
++[dependencies.block-padding]
++version = "0.2"
+ 
+ [dependencies.digest]
+ version = "0.9"

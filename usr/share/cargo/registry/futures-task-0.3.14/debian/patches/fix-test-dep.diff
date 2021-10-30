@@ -1,0 +1,22 @@
+Index: futures-task/src/noop_waker.rs
+===================================================================
+--- futures-task.orig/src/noop_waker.rs
++++ futures-task/src/noop_waker.rs
+@@ -23,7 +23,7 @@ fn noop_raw_waker() -> RawWaker {
+ /// # Examples
+ ///
+ /// ```
+-/// use futures::task::noop_waker;
++/// use futures_task::noop_waker;
+ /// let waker = noop_waker();
+ /// waker.wake();
+ /// ```
+@@ -40,7 +40,7 @@ pub fn noop_waker() -> Waker {
+ /// # Examples
+ ///
+ /// ```
+-/// use futures::task::noop_waker_ref;
++/// use futures_task::noop_waker_ref;
+ /// let waker = noop_waker_ref();
+ /// waker.wake_by_ref();
+ /// ```

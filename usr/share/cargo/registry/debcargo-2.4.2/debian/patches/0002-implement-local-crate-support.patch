@@ -1,0 +1,179 @@
+From b6a6264b85a0e86d6d51cd266920842d430f2e9e Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Fabian=20Gr=C3=BCnbichler?= <f.gruenbichler@proxmox.com>
+Date: Fri, 10 Jan 2020 14:41:28 +0100
+Subject: [PATCH 2/2] implement local crate support
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Signed-off-by: Fabian Grünbichler <f.gruenbichler@proxmox.com>
+---
+ debcargo.toml.example |  4 +++
+ src/bin/debcargo.rs   |  7 +++-
+ src/config.rs         |  8 +++++
+ src/crates.rs         | 75 ++++++++++++++++++++++++++++++++++++++++++-
+ 4 files changed, 92 insertions(+), 2 deletions(-)
+
+diff --git a/debcargo.toml.example b/debcargo.toml.example
+index 9080ef6..564fe1e 100644
+--- a/debcargo.toml.example
++++ b/debcargo.toml.example
+@@ -35,6 +35,10 @@
+ #
+ #overlay = "."
+ 
++# Local directory where crate can be found, instead of downloading from crates.io. Resolved relative to the directory that contains this config file.
++#
++#crate_src_path = "../.."
++
+ # Paths from the crate tarball, to exclude from the orig tarball.
+ # See https://docs.rs/glob/latest/glob/struct.Pattern.html for syntax
+ #excludes = ["libgit2/**"]
+diff --git a/src/bin/debcargo.rs b/src/bin/debcargo.rs
+index e6e223c..4d110bc 100644
+--- a/src/bin/debcargo.rs
++++ b/src/bin/debcargo.rs
+@@ -57,7 +57,12 @@ fn do_package(matches: &ArgMatches) -> Result<()> {
+     let overlay_write_back = !matches.is_present("no-overlay-write-back");
+     let copyright_guess_harder = matches.is_present("copyright-guess-harder");
+ 
+-    let mut crate_info = CrateInfo::new(crate_name, version)?;
++    let crate_path = config.crate_src_path(config_path);
++
++    let mut crate_info = match crate_path {
++        Some(p) => CrateInfo::new_with_local_crate(crate_name, version, &p)?,
++        None => CrateInfo::new(crate_name, version)?,
++    };
+     let pkgbase = BaseInfo::new(
+         crate_name,
+         &crate_info,
+diff --git a/src/config.rs b/src/config.rs
+index fa13c45..0a65b65 100644
+--- a/src/config.rs
++++ b/src/config.rs
+@@ -19,6 +19,7 @@ pub struct Config {
+     pub excludes: Option<Vec<String>>,
+     pub whitelist: Option<Vec<String>>,
+     pub allow_prerelease_deps: bool,
++    pub crate_src_path: Option<PathBuf>,
+     pub summary: String,
+     pub description: String,
+     pub uploaders: Option<Vec<String>>,
+@@ -62,6 +63,7 @@ impl Default for Config {
+             excludes: None,
+             whitelist: None,
+             allow_prerelease_deps: false,
++            crate_src_path: None,
+             summary: "".to_string(),
+             description: "".to_string(),
+             uploaders: None,
+@@ -85,6 +87,12 @@ impl Config {
+             .map(|p| config_path.unwrap().parent().unwrap().join(p))
+     }
+ 
++    pub fn crate_src_path(&self, config_path: Option<&Path>) -> Option<PathBuf> {
++        self.crate_src_path
++            .as_ref()
++            .map(|p| config_path.unwrap().parent().unwrap().join(p))
++    }
++
+     pub fn is_source_present(&self) -> bool {
+         self.source.is_some()
+     }
+diff --git a/src/crates.rs b/src/crates.rs
+index 40861da..00ccd2f 100644
+--- a/src/crates.rs
++++ b/src/crates.rs
+@@ -4,8 +4,11 @@ use cargo::{
+     core::InternedString,
+     core::{
+         Dependency, EitherManifest, FeatureValue, Manifest, Package, PackageId, Registry, Source,
+-        SourceId, Summary, Target, TargetKind,
++        SourceId, Summary, Target, TargetKind, Workspace,
+     },
++    core::source::MaybePackage,
++    ops,
++    ops::PackageOpts,
+     sources::registry::RegistrySource,
+     util::{toml::read_manifest, FileLock},
+     Config,
+@@ -77,6 +80,76 @@ impl CrateInfo {
+         CrateInfo::new_with_update(crate_name, version, true)
+     }
+ 
++    pub fn new_with_local_crate(crate_name: &str, version: Option<&str>, crate_path: &Path) -> Result<CrateInfo> {
++        let config = Config::default()?;
++        let crate_path = crate_path.canonicalize()?;
++        let source_id = SourceId::for_path(&crate_path)?;
++
++        let version = version.unwrap();
++
++        let (package, crate_file) = {
++            let yanked_whitelist = HashSet::new();
++            let package_id = PackageId::new(crate_name, version, source_id)?;
++
++            let mut source = source_id.load(&config, &yanked_whitelist)?;
++            source.update()?;
++
++            let maybe_package = source.download(package_id)?;
++            let package = match maybe_package {
++                MaybePackage::Ready(p) => Ok(p),
++                _ => Err(format_err!("Failed to 'download' local crate {} from {}",
++                        crate_name,
++                        crate_path.display()
++                    )),
++            }?;
++            let crate_file = {
++                let workspace = Workspace::ephemeral(
++                    package.clone(),
++                    &config,
++                    None,
++                    true)?;
++
++                let opts = PackageOpts {
++                    config: &config,
++                    verify: false,
++                    list: false,
++                    check_metadata: true,
++                    allow_dirty: true,
++                    all_features: true,
++                    no_default_features: false,
++                    jobs: None,
++                    target: None,
++                    features: Vec::new(),
++                };
++
++                // as of cargo 0.41 this returns a FileLock with a temp path, instead of the one
++                // it got renamed to
++                if ops::package(&workspace, &opts)?.is_none() {
++                    return Err(format_err!("Failed to assemble crate file for local crate {} at {}\n",
++                        crate_name,
++                        crate_path.display()
++                    ));
++                }
++                let filename = format!("{}-{}.crate", crate_name, version);
++                workspace.target_dir().join("package").open_rw(&filename, &config, "crate file")?
++            };
++
++            (package.clone(), crate_file)
++        };
++
++        let manifest = package.manifest().clone();
++
++        Ok(CrateInfo {
++            package,
++            manifest,
++            crate_file,
++            config,
++            source_id,
++            excludes: vec![],
++            includes: vec![],
++        })
++    }
++
+     pub fn new_with_update(
+         crate_name: &str,
+         version: Option<&str>,
+-- 
+2.20.1
+

@@ -1,0 +1,25 @@
+Index: ring/Cargo.toml
+===================================================================
+--- ring.orig/Cargo.toml
++++ ring/Cargo.toml
+@@ -60,10 +60,6 @@ slow_tests = []
+ std = ["alloc"]
+ test_logging = []
+ wasm32_c = []
+-[target."cfg(all(target_arch = \"wasm32\", target_vendor = \"unknown\", target_os = \"unknown\", target_env = \"\"))".dependencies.web-sys]
+-version = "0.3.37"
+-features = ["Crypto", "Window"]
+-default-features = false
+ [target."cfg(any(target_arch = \"x86\",target_arch = \"x86_64\", all(any(target_arch = \"aarch64\", target_arch = \"arm\"), any(target_os = \"android\", target_os = \"fuchsia\", target_os = \"linux\"))))".dependencies.spin]
+ version = "0.5.2"
+ default-features = false
+@@ -83,9 +79,6 @@ default-features = false
+ [target."cfg(any(unix, windows))".dev-dependencies.libc]
+ version = "0.2.80"
+ default-features = false
+-[target."cfg(target_arch = \"wasm32\")".dev-dependencies.wasm-bindgen-test]
+-version = "0.3.18"
+-default-features = false
+ [target."cfg(target_os = \"windows\")".dependencies.winapi]
+ version = "0.3"
+ features = ["ntsecapi", "wtypesbase"]

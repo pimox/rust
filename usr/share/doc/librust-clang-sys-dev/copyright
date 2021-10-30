@@ -1,0 +1,19 @@
+Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+Upstream-Name: clang-sys
+Upstream-Contact: Kyle Mayes <kyle@mayeses.com>
+Source: https://github.com/KyleMayes/clang-sys
+
+Files: *
+Copyright: 2015-2018 Kyle Mayes <kyle@mayeses.com>
+License: Apache-2.0
+
+Files: debian/*
+Copyright:
+ 2018-2020 Debian Rust Maintainers <pkg-rust-maintainers@alioth-lists.debian.net>
+ 2018 Ximin Luo <infinity0@debian.org>
+ 2019-2020 Daniel Kahn Gillmor <dkg@fifthhorseman.net>
+License: Apache-2.0
+
+License: Apache-2.0
+ Debian systems provide the Apache 2.0 license in
+ /usr/share/common-licenses/Apache-2.0

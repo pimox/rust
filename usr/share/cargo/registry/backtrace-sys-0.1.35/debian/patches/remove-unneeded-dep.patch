@@ -1,0 +1,22 @@
+From ac340f78a08a9a54090fdd1c9b53ddb88794d181 Mon Sep 17 00:00:00 2001
+From: Wolfgang Silbermayr <wolfgang@silbermayr.at>
+Date: Fri, 11 Jan 2019 09:45:24 +0100
+Subject: [PATCH] Remove unneeded dep
+
+---
+ Cargo.toml | 2 --
+ 1 file changed, 2 deletions(-)
+
+Index: backtrace-sys/Cargo.toml
+===================================================================
+--- backtrace-sys.orig/Cargo.toml
++++ backtrace-sys/Cargo.toml
+@@ -32,8 +32,6 @@ package = "rustc-std-workspace-core"
+ [dependencies.libc]
+ version = "0.2"
+ default-features = false
+-[build-dependencies.cc]
+-version = "1.0.37"
+ 
+ [features]
+ backtrace-sys = []

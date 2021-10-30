@@ -1,0 +1,13 @@
+Index: build/cbindgen/tests/tests.rs
+===================================================================
+--- cbindgen/tests/tests.rs
++++ cbindgen/tests/tests.rs
+@@ -71,7 +71,7 @@ fn compile(
+     let cc = match language {
+         Language::Cxx => env::var("CXX").unwrap_or_else(|_| "g++".to_owned()),
+         Language::C => env::var("CC").unwrap_or_else(|_| "gcc".to_owned()),
+-        Language::Cython => env::var("CYTHON").unwrap_or_else(|_| "cython".to_owned()),
++        Language::Cython => env::var("CYTHON").unwrap_or_else(|_| "cython3".to_owned()),
+     };
+ 
+     let file_name = cbindgen_output

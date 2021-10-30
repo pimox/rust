@@ -1,0 +1,22 @@
+Index: failure-derive/tests/wraps.rs
+===================================================================
+--- failure-derive.orig/tests/wraps.rs
++++ failure-derive/tests/wraps.rs
+@@ -46,7 +46,7 @@ struct WrapBacktraceError {
+     backtrace: Backtrace,
+ }
+ 
+-#[test]
++//#[test]
+ fn wrap_backtrace_error() {
+     let inner = io::Error::from_raw_os_error(98);
+     let err: WrapBacktraceError = WrapBacktraceError {
+@@ -74,7 +74,7 @@ enum WrapEnumError {
+     },
+ }
+ 
+-#[test]
++//#[test]
+ fn wrap_enum_error() {
+     let io_error = io::Error::from_raw_os_error(98);
+     let err: WrapEnumError = WrapEnumError::Io(io_error);

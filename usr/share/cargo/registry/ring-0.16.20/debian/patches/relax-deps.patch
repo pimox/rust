@@ -1,0 +1,12 @@
+Index: ring/Cargo.toml
+===================================================================
+--- ring.orig/Cargo.toml
++++ ring/Cargo.toml
+@@ -87,6 +87,6 @@ default-features = false
+ version = "0.3.18"
+ default-features = false
+ [target."cfg(target_os = \"windows\")".dependencies.winapi]
+-version = "0.3.8"
++version = "0.3"
+ features = ["ntsecapi", "wtypesbase"]
+ default-features = false

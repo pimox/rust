@@ -1,0 +1,5 @@
+overlay = "."
+excludes = ["libgit2/**"]
+
+[packages.lib]
+depends = ["libgit2-dev"]

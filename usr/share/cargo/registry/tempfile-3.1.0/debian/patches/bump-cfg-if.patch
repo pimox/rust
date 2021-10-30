@@ -1,0 +1,13 @@
+Index: tempfile/Cargo.toml
+===================================================================
+--- tempfile.orig/Cargo.toml
++++ tempfile/Cargo.toml
+@@ -23,7 +23,7 @@ keywords = ["tempfile", "tmpfile", "file
+ license = "MIT OR Apache-2.0"
+ repository = "https://github.com/Stebalien/tempfile"
+ [dependencies.cfg-if]
+-version = "0.1"
++version = "1.0"
+ 
+ [dependencies.rand]
+ version = "0.7"

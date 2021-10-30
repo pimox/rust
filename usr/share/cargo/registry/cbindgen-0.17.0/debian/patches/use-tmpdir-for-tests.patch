@@ -1,0 +1,34 @@
+Index: cbindgen/tests/tests.rs
+===================================================================
+--- cbindgen.orig/tests/tests.rs
++++ cbindgen/tests/tests.rs
+@@ -5,6 +5,7 @@ use std::collections::HashSet;
+ use std::path::Path;
+ use std::process::Command;
+ use std::{env, fs, str};
++use tempfile::tempdir;
+ 
+ fn style_str(style: Style) -> &'static str {
+     match style {
+@@ -156,8 +157,9 @@ fn run_compile_test(
+ ) {
+     let crate_dir = env::var("CARGO_MANIFEST_DIR").unwrap();
+     let tests_path = Path::new(&crate_dir).join("tests");
+-    let mut generated_file = tests_path.join("expectations");
+-    fs::create_dir_all(&generated_file).unwrap();
++    //let mut generated_file = tests_path.join("expectations");
++    //fs::create_dir_all(&generated_file).unwrap();
++    let tmpdir = tempdir().unwrap();
+ 
+     let style_ext = style
+         .map(|style| match style {
+@@ -181,7 +183,8 @@ fn run_compile_test(
+     let source_file =
+         format!("{}{}{}", name, style_ext, lang_ext).replace(SKIP_WARNING_AS_ERROR_SUFFIX, "");
+ 
+-    generated_file.push(source_file);
++    //generated_file.push(source_file);
++    let mut generated_file = tmpdir.path().join(source_file);
+ 
+     let cbindgen_output = run_cbindgen(
+         cbindgen_path,

@@ -1,0 +1,13 @@
+Index: bindgen/Cargo.toml
+===================================================================
+--- bindgen.orig/Cargo.toml
++++ bindgen/Cargo.toml
+@@ -51,7 +51,7 @@ version = "2"
+ optional = true
+ 
+ [dependencies.env_logger]
+-version = "0.6"
++version = "0.7"
+ optional = true
+ 
+ [dependencies.lazy_static]

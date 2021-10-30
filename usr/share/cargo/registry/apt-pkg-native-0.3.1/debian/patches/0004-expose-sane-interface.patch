@@ -1,0 +1,22 @@
+From 7d25cf2f093dba52c6b067bb41f40bf33a8c4568 Mon Sep 17 00:00:00 2001
+From: Stefan Reiter <s.reiter@proxmox.com>
+Date: Tue, 20 Oct 2020 14:06:38 +0200
+Subject: [PATCH] expose 'sane' interface to external consumers
+
+---
+ src/lib.rs | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/lib.rs b/src/lib.rs
+index ff9ee34..1734e9c 100644
+--- a/src/lib.rs
++++ b/src/lib.rs
+@@ -33,7 +33,7 @@
+ 
+ mod citer;
+ mod raw;
+-mod sane;
++pub mod sane;
+ pub mod simple;
+ 
+ pub use crate::sane::Cache;

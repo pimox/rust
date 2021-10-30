@@ -1,0 +1,35 @@
+This is a workaround due to the lack of a "collapse_features"
+mechanism in debcargo.  See https://bugs.debian.org/977627
+
+--- a/Cargo.toml
++++ b/Cargo.toml
+@@ -23,7 +23,6 @@
+ repository = "https://github.com/RustCrypto/utils"
+ [dependencies.block-padding]
+ version = "0.2.0"
+-optional = true
+ 
+ [dependencies.generic-array]
+ version = "0.14"
+--- a/src/lib.rs
++++ b/src/lib.rs
+@@ -1,11 +1,9 @@
+ #![no_std]
+ pub use generic_array;
+-#[cfg(feature = "block-padding")]
+ pub use block_padding;
+ 
+ use core::{slice, convert::TryInto};
+ use generic_array::{GenericArray, ArrayLength};
+-#[cfg(feature = "block-padding")]
+ use block_padding::{Padding, PadError};
+ 
+ /// Buffer for block processing of data
+@@ -186,7 +184,6 @@
+     ///
+     /// Returns `PadError` if internall buffer is full, which can only happen if
+     /// `input_lazy` was used.
+-    #[cfg(feature = "block-padding")]
+     #[inline]
+     pub fn pad_with<P: Padding>(&mut self)
+         -> Result<&mut GenericArray<u8, BlockSize>, PadError>

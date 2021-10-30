@@ -1,0 +1,13 @@
+Index: getrandom/Cargo.toml
+===================================================================
+--- getrandom.orig/Cargo.toml
++++ getrandom/Cargo.toml
+@@ -22,7 +22,7 @@ categories = ["os", "no-std"]
+ license = "MIT OR Apache-2.0"
+ repository = "https://github.com/rust-random/getrandom"
+ [dependencies.cfg-if]
+-version = "0.1.2"
++version = "1.0"
+ 
+ [dependencies.compiler_builtins]
+ version = "0.1"

@@ -1,0 +1,1 @@
+librust-crossbeam-channel+crossbeam-utils-dev binary: empty-rust-library-declares-provides *

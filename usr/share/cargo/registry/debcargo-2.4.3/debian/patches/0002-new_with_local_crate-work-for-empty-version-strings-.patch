@@ -1,0 +1,33 @@
+From 6f9257f03465167980ccc7f901d90e11e254d31e Mon Sep 17 00:00:00 2001
+From: Ximin Luo <infinity0@debian.org>
+Date: Mon, 20 Apr 2020 22:59:35 +0100
+Subject: [PATCH 2/3] new_with_local_crate: work for empty version strings too
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Signed-off-by: Fabian Grünbichler <f.gruenbichler@proxmox.com>
+---
+ src/crates.rs | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+Index: debcargo/src/crates.rs
+===================================================================
+--- debcargo.orig/src/crates.rs
++++ debcargo/src/crates.rs
+@@ -93,13 +93,13 @@ impl CrateInfo {
+             source.update()?;
+ 
+             let package_id = match version {
+-                Some(version) => PackageId::new(crate_name, version, source_id)?,
+-                None => {
++                None | Some("") => {
+                     let dep = Dependency::parse_no_deprecated(crate_name, None, source_id)?;
+                     let mut package_id: Option<PackageId> = None;
+                     source.query(&dep, &mut |p| package_id = Some(p.package_id()))?;
+                     package_id.unwrap()
+                 },
++                Some(version) => PackageId::new(crate_name, version, source_id)?,
+             };
+ 
+             let maybe_package = source.download(package_id)?;

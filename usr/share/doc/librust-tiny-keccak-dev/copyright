@@ -1,0 +1,17 @@
+Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+Upstream-Name: tiny-keccak
+Upstream-Contact: debris <marek.kotewicz@gmail.com>
+
+Files: *
+Copyright: 2019-2020 debris <marek.kotewicz@gmail.com>
+License: CC0-1.0
+
+Files: debian/*
+Copyright:
+ 2020 Debian Rust Maintainers <pkg-rust-maintainers@alioth-lists.debian.net>
+ 2020 Sylvestre Ledru <sylvestre@debian.org>
+License: CC0-1.0
+
+License: CC0-1.0
+ Debian systems provide the CC0 1.0 Universal License in
+ /usr/share/common-licenses/CC0-1.0

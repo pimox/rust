@@ -1,0 +1,39 @@
+Index: want/Cargo.toml
+===================================================================
+--- want.orig/Cargo.toml
++++ want/Cargo.toml
+@@ -25,8 +25,6 @@ version = "0.4"
+ 
+ [dependencies.try-lock]
+ version = "0.2"
+-[dev-dependencies.tokio-executor]
+-version = "0.2.0-alpha.2"
+-
+-[dev-dependencies.tokio-sync]
+-version = "0.2.0-alpha.2"
++[dev-dependencies.tokio]
++version = "0.2.4"
++features = ["sync", "rt-core"]
+Index: want/src/lib.rs
+===================================================================
+--- want.orig/src/lib.rs
++++ want/src/lib.rs
+@@ -417,12 +417,15 @@ impl Future for Want<'_> {
+ #[cfg(test)]
+ mod tests {
+     use std::thread;
+-    use tokio_sync::oneshot;
++    use tokio::sync::oneshot;
+     use super::*;
+ 
+     fn block_on<F: Future>(f: F) -> F::Output {
+-        tokio_executor::enter()
+-            .expect("block_on enter")
++        tokio::runtime::Builder::new()
++            .basic_scheduler()
++            .enable_all()
++            .build()
++            .unwrap()
+             .block_on(f)
+     }
+ 

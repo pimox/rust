@@ -1,0 +1,23 @@
+Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+Upstream-Name: cbindgen
+Upstream-Contact:
+ Jeff Muizelaar <jmuizelaar@mozilla.com>
+ Kartikaya Gupta <kats@mozilla.com>
+ Ryan Hunt <rhunt@eqrion.net>
+Source: https://github.com/eqrion/cbindgen/
+
+Files: *
+Copyright:
+ 2017-2018 Jeff Muizelaar <jmuizelaar@mozilla.com>
+ 2017-2018 Kartikaya Gupta <kats@mozilla.com>
+ 2017-2018 Ryan Hunt <rhunt@eqrion.net>
+License: MPL-2.0
+
+Files: debian/*
+Copyright:
+ 2018 Debian Rust Maintainers <pkg-rust-maintainers@alioth-lists.debian.net>
+ 2018 Sylvestre Ledru <sylvestre@debian.org>
+License: MPL-2.0
+
+License: MPL-2.0
+ Debian systems provide the MPL 2.0 in /usr/share/common-licenses/MPL-2.0

@@ -1,0 +1,19 @@
+Description: Re-add dev dependencies
+ The publishing process of the crate seemingly strips out the dev
+ dependencies. This causes the doctests to fail which would require these
+ dependencies to be present. This patch adds some of the dev dependencies as found
+ in the project's upstream repository.
+Forwarded: no
+---
+Index: pin-project/Cargo.toml
+===================================================================
+--- pin-project.orig/Cargo.toml
++++ pin-project/Cargo.toml
+@@ -26,3 +26,7 @@ repository = "https://github.com/taiki-e
+ [dependencies.pin-project-internal]
+ version = "=0.4.8"
+ default-features = false
++
++[dev-dependencies]
++trybuild = "1.0"
++rustversion = "1.0"

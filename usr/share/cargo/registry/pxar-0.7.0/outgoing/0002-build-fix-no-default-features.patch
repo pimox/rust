@@ -1,0 +1,26 @@
+From 4a5369346538ef65d7af4622a521c88f83ecedcc Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Fabian=20Gr=C3=BCnbichler?= <f.gruenbichler@proxmox.com>
+Date: Wed, 13 Jan 2021 10:58:43 +0100
+Subject: [PATCH pxar 2/2] build: fix --no-default-features
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Signed-off-by: Fabian Grünbichler <f.gruenbichler@proxmox.com>
+---
+ src/encoder/aio.rs | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/src/encoder/aio.rs b/src/encoder/aio.rs
+index 908e019..609bd0f 100644
+--- a/src/encoder/aio.rs
++++ b/src/encoder/aio.rs
+@@ -259,4 +259,5 @@ mod tokio_writer {
+     }
+ }
+ 
++#[cfg(feature = "tokio-io")]
+ pub use tokio_writer::TokioWriter;
+-- 
+2.20.1
+

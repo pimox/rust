@@ -1,0 +1,13 @@
+Index: http/Cargo.toml
+===================================================================
+--- http.orig/Cargo.toml
++++ http/Cargo.toml
+@@ -39,7 +39,7 @@ path = "benches/header_value.rs"
+ name = "uri"
+ path = "benches/uri.rs"
+ [dependencies.bytes]
+-version = "0.5"
++version = "1.0"
+ 
+ [dependencies.fnv]
+ version = "1.0.5"

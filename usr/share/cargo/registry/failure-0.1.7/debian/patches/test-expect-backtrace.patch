@@ -1,0 +1,13 @@
+Description: Debian's tests run with RUST_BACKTRACE=1 which breaks this test;
+ make it more lenient.
+--- a/src/error/mod.rs
++++ b/src/error/mod.rs
+@@ -225,7 +225,7 @@
+         let error: Error = io::Error::new(io::ErrorKind::NotFound, "test").into();
+         assert!(error.downcast_ref::<io::Error>().is_some());
+         let _: ::Backtrace = *error.backtrace();
+-        assert_eq!(format!("{:?}", io_error), format!("{:?}", error));
++        assert_eq!(Some(format!("{:?}", io_error).as_str()), format!("{:?}", error).lines().next());
+         assert_eq!(format!("{}", io_error), format!("{}", error));
+         drop(error);
+         assert!(true);

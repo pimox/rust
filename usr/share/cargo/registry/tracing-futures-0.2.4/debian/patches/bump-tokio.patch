@@ -1,0 +1,37 @@
+Index: tracing-futures/Cargo.toml
+===================================================================
+--- tracing-futures.orig/Cargo.toml
++++ tracing-futures/Cargo.toml
+@@ -33,21 +33,16 @@ optional = true
+ version = "0.3"
+ optional = true
+ 
+-[dependencies.futures_01]
+-version = "0.1"
+-optional = true
+-package = "futures"
+-
+ [dependencies.pin-project]
+-version = "0.4"
++version = "1.0"
+ optional = true
+ 
+ [dependencies.tokio]
+-version = "0.1"
++version = "0.3"
+ optional = true
+ 
+ [dependencies.tokio-executor]
+-version = "0.1"
++version = "0.3"
+ optional = true
+ 
+ [dependencies.tracing]
+@@ -64,7 +59,6 @@ version = "0.1.2"
+ 
+ [features]
+ default = ["std-future", "std"]
+-futures-01 = ["futures_01", "std"]
+ futures-03 = ["std-future", "futures", "futures-task", "std"]
+ std = ["tracing/std"]
+ std-future = ["pin-project"]

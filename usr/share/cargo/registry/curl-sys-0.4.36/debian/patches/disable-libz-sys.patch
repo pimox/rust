@@ -1,0 +1,24 @@
+Index: curl-sys/Cargo.toml
+===================================================================
+--- curl-sys.orig/Cargo.toml
++++ curl-sys/Cargo.toml
+@@ -32,11 +32,6 @@ version = "0.2.2"
+ version = "0.1.3"
+ optional = true
+ 
+-[dependencies.libz-sys]
+-version = "1.0.18"
+-features = ["libc"]
+-default-features = false
+-
+ [build-dependencies.cc]
+ version = "1.0"
+ 
+@@ -52,7 +47,6 @@ spnego = []
+ ssl = ["openssl-sys"]
+ static-curl = []
+ static-ssl = ["openssl-sys"]
+-zlib-ng-compat = ["libz-sys/zlib-ng", "static-curl"]
+ [target."cfg(all(unix, not(target_os = \"macos\")))".dependencies.openssl-sys]
+ version = "0.9"
+ optional = true

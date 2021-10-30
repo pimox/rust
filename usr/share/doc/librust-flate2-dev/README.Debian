@@ -1,0 +1,6 @@
+The Debian version of the flate2 crate does not actually use miniz, but uses
+zlib. The "miniz-sys" feature is preserved for compatibility but it actually
+activates the zlib feature rather than pulling in the miniz crate.
+
+This is to save packaging effort - zlib is already installed in basically all
+Debian systems already.

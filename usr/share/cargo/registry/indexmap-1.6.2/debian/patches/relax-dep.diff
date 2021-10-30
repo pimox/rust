@@ -1,0 +1,13 @@
+Index: indexmap/Cargo.toml
+===================================================================
+--- indexmap.orig/Cargo.toml
++++ indexmap/Cargo.toml
+@@ -34,7 +34,7 @@ debug = true
+ [lib]
+ bench = false
+ [dependencies.hashbrown]
+-version = "0.9.1"
++version = "0.11"
+ features = ["raw"]
+ default-features = false
+ 

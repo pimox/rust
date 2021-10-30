@@ -1,0 +1,76 @@
+We want to avoid hitting the NEW queue.
+
+This means (at least for now):
+
+ - dropping the "rustc-dep-of-std" feature (and its component
+   features, core and compiler_builtins) because this minimal build
+   was not already in debian.
+
+ - dropping the unncessary benchmark dependency on criterion (which
+   itself would require a lot to get through NEW)
+
+--- a/Cargo.toml
++++ b/Cargo.toml
+@@ -25,21 +25,6 @@
+ [lib]
+ bench = false
+ 
+-[[bench]]
+-name = "bench"
+-path = "src/bench.rs"
+-harness = false
+-[dependencies.compiler_builtins]
+-version = "0.1.2"
+-optional = true
+-
+-[dependencies.core]
+-version = "1.0.0"
+-optional = true
+-package = "rustc-std-workspace-core"
+-[dev-dependencies.criterion]
+-version = "0.3"
+-
+ [dev-dependencies.getrandom]
+ version = "0.1"
+ features = ["wasm-bindgen"]
+@@ -52,7 +37,6 @@
+ 
+ [features]
+ default = ["std"]
+-rustc-dep-of-std = ["core", "compiler_builtins"]
+ std = []
+ [target."cfg(target_arch = \"wasm32\")".dev-dependencies.wasm-bindgen]
+ version = "0.2.63"
+--- a/src/bench.rs
++++ b/src/bench.rs
+@@ -1,30 +0,0 @@
+-use adler32::RollingAdler32;
+-use criterion::{criterion_group, criterion_main, BenchmarkId, Criterion, Throughput};
+-use humansize::{file_size_opts, FileSize};
+-use rand::Rng;
+-
+-fn bench_update_buffer(c: &mut Criterion) {
+-    let mut rng = rand::thread_rng();
+-    let mut group = c.benchmark_group("update_buffer");
+-    for &size in [512, 100 * 1024].iter() {
+-        let mut adler = RollingAdler32::new();
+-        let formatted_size = size.file_size(file_size_opts::BINARY).unwrap();
+-        let in_bytes = {
+-            let mut in_bytes = vec![0u8; size];
+-            rng.fill(&mut in_bytes[..]);
+-            in_bytes
+-        };
+-
+-        group.throughput(Throughput::Bytes(size as u64));
+-        group.bench_with_input(
+-            BenchmarkId::from_parameter(formatted_size),
+-            &in_bytes,
+-            |b, data| {
+-                b.iter(|| adler.update_buffer(data));
+-            },
+-        );
+-    }
+-}
+-
+-criterion_group!(bench_default, bench_update_buffer);
+-criterion_main!(bench_default);
